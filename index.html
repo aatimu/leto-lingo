@@ -162,8 +162,9 @@
     // UYGULAMA BAŞLANGICI: JSON Dosyasını oku
     async function loadDatabase() {
         try {
-            // questions.json yerine kendi Vercel linkinin sonuna ekleyerek yaz:
-            const response = await fetch('https://leto-lingo.vercel.app/questions.json');
+            // Başına hiçbir URL koymadan, sadece dosya adını yazıyoruz.
+            // Vercel siten canlıya çıktığında bunu otomatik olarak kendi klasöründen okuyacaktır.
+            const response = await fetch('./questions.json');
             if (!response.ok) throw new Error("Dosya bulunamadı veya okunamadı");
             vocabularyDatabase = await response.json();
             
@@ -175,7 +176,6 @@
             console.error(error);
         }
     }
-
     function setLangMode(mode) {
         langMode = mode;
         document.querySelectorAll("#setup-container .options-container .btn").forEach(b => {
