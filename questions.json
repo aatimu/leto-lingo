@@ -1,0 +1,6 @@
+[
+  { "level": "A1", "type": "word", "lv": "Sveiki", "tr": "Merhaba", "en": "Hello" },
+  { "level": "A1", "type": "word", "lv": "Paldies", "tr": "Teşekkürler", "en": "Thank you" },
+  { "level": "A1", "type": "sentence", "questionPattern": "Es _____ Atalay.", "answer": "esmu", "tr": "Ben Atalay'ım.", "en": "I am Atalay." }
+  
+]
