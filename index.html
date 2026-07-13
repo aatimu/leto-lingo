@@ -176,15 +176,66 @@
             document.getElementById("loading-container").innerText = "Hata: Canlı veri havuzu yüklenemedi!";
             console.error(error);
         }
+   // 1. Tanımlı Konu Başlıkları Sözlüğü
+const topicTranslations = {
+    'Selamlaşma ve Tanışma': {
+        tr: 'Selamlaşma ve Tanışma',
+        en: 'Greetings and Introductions',
+        both: 'Greetings and Introductions (Selamlaşma ve Tanışma)'
+    },
+    'Meslekler ve Günlük Hayat': {
+        tr: 'Meslekler ve Günlük Hayat',
+        en: 'Occupations and Daily Life',
+        both: 'Occupations and Daily Life (Meslekler ve Günlük Hayat)'
+    },
+    'Sayılar ve İletişim': {
+        tr: 'Sayılar ve İletişim',
+        en: 'Numbers and Communication',
+        both: 'Numbers and Communication (Sayılar ve İletişim)'
     }
-    function setLangMode(mode) {
-        langMode = mode;
-        document.querySelectorAll("#setup-container .options-container .btn").forEach(b => {
-            if(b.id === `lang-${mode}`) b.classList.add('selected-mode');
-            else b.classList.remove('selected-mode');
-        });
-    }
+};
 
+let selectedLangMode = 'tr'; // Varsayılan mod
+
+// 2. Dil Butonlarına Tıklanınca Tetiklenecek Fonksiyon
+function setLangMode(mode) {
+    selectedLangMode = mode;
+    
+    // Aktif buton görsel stilini güncellemek için (Mavi arka plan sınıfı)
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    // HTML'deki butonlarına id veya class verdiysen ona göre seçebilirsin
+    // Örn: document.getElementById(`btn-${mode}`).classList.add('active');
+
+    // Konu listesini seçilen dile göre ekrana bas
+    renderTopics();
+}
+
+// 3. Konuları Ekrana Dinamik Basan Fonksiyon
+function renderTopics() {
+    // JSON'daki benzersiz (unique) konu isimlerini topla
+    const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
+    
+    const container = document.getElementById("topics-container");
+    container.innerHTML = ""; // İçeriği temizle
+    
+    uniqueTopics.forEach(topicKey => {
+        // Sözlükten çeviriyi al, yoksa JSON'daki orijinal anahtarı kullan
+        let buttonText = topicKey;
+        if (topicTranslations[topicKey]) {
+            buttonText = topicTranslations[topicKey][selectedLangMode];
+        }
+        
+        // Butonu oluştur
+        const button = document.createElement("button");
+        button.className = "topic-btn";
+        button.innerText = buttonText;
+        
+        // Tıklandığında oyun fonksiyonunu JSON'daki orijinal anahtarla tetikle
+        button.onclick = () => startTopic(topicKey);
+        
+        container.appendChild(button);
+    });
+}
     function getTranslation(item) {
         if (langMode === 'tr') return item.tr;
         if (langMode === 'en') return item.en;
