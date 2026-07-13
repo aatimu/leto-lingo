@@ -15,6 +15,18 @@
             --border: #e0e0e0;
             --success: #2ecc71;
             --error: #e74c3c;
+            --warning: #f39c12;
+            --keyboard-bg: #f0f2f5;
+        }
+
+        /* 🌙 Dark Mode Renk Değişkenleri */
+        [data-theme="dark"] {
+            --bg: #121214;
+            --card-bg: #1a1a1e;
+            --text: #e1e1e6;
+            --text-light: #a4a4a8;
+            --border: #29292e;
+            --keyboard-bg: #202024;
         }
 
         body {
@@ -27,6 +39,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
@@ -38,15 +51,31 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.05);
             text-align: center;
             position: relative;
+            transition: background 0.3s;
         }
 
-        /* Ayarlar Paneli (Sağ Üst) */
-        .settings-panel {
+        /* Üst Kontrol Paneli */
+        .top-bar {
             position: absolute;
             top: 15px;
+            left: 20px;
             right: 20px;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .streak-badge {
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .right-controls {
+            display: flex;
+            gap: 8px;
         }
 
         .settings-btn {
@@ -57,6 +86,11 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
+            color: #333;
+        }
+        [data-theme="dark"] .settings-btn {
+            background: #29292e;
+            color: #e1e1e6;
         }
 
         .settings-btn.active {
@@ -65,8 +99,8 @@
         }
 
         h1, h2 {
-            margin-top: 0;
-            color: #111;
+            margin-top: 20px;
+            color: var(--text);
         }
 
         .subtitle {
@@ -78,9 +112,7 @@
             margin-top: 20px;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .btn-group {
             display: flex;
@@ -97,6 +129,7 @@
             border: 2px solid var(--border);
             border-radius: 12px;
             background: var(--card-bg);
+            color: var(--text);
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -124,25 +157,32 @@
             width: 100%;
             text-align: left;
             padding: 16px 20px;
-            background: #fafafa;
+            background: var(--card-bg);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .topic-btn:hover {
-            background: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .error-pool-btn {
+            border-color: var(--error);
+            background: rgba(231, 76, 60, 0.05);
+            font-weight: bold;
+        }
+        .error-pool-btn:hover {
+            background: var(--error);
+            color: white;
         }
 
         .topic-score {
             font-size: 0.85rem;
-            background: #eef2f7;
+            background: rgba(0,0,0,0.05);
             padding: 4px 8px;
             border-radius: 6px;
             color: var(--text-light);
             font-weight: bold;
+        }
+        [data-theme="dark"] .topic-score {
+            background: rgba(255,255,255,0.05);
         }
 
         .progress-bar {
@@ -152,7 +192,9 @@
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 25px;
+            margin-top: 20px;
         }
+        [data-theme="dark"] .progress-bar { background: #29292e; }
 
         .progress {
             height: 100%;
@@ -165,7 +207,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 15px;
-            color: #111;
+            color: var(--text);
         }
 
         .hint-box {
@@ -173,6 +215,34 @@
             color: var(--text-light);
             margin-bottom: 25px;
             font-style: italic;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .hint-action-btn {
+            padding: 0 15px;
+            font-size: 1.2rem;
         }
 
         .options-grid {
@@ -186,38 +256,15 @@
             width: 100%;
             padding: 15px;
             text-align: center;
-            background: #fdfdfd;
         }
 
-        .option-btn:hover {
-            background: #f0f7ff;
-            border-color: var(--primary);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 14px;
-            font-size: 1.1rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        /* 🇱🇻 Letonca Sanal Klavye */
         .lv-keyboard {
             display: flex;
             justify-content: center;
             gap: 6px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            background: #f0f2f5;
+            background: var(--keyboard-bg);
             padding: 10px;
             border-radius: 12px;
         }
@@ -227,7 +274,9 @@
             font-size: 1.1rem;
             min-width: 35px;
             border-radius: 6px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
         }
 
         .feedback {
@@ -238,49 +287,46 @@
         }
         .feedback.success { color: var(--success); }
         .feedback.error { color: var(--error); }
-        .feedback.warning { color: #f39c12; }
+        .feedback.warning { color: var(--warning); }
 
-        /* Yanlış Cevap Sallanma Animasyonu */
-        .shake {
-            animation: shake 0.4s ease-in-out;
-        }
+        .shake { animation: shake 0.4s ease-in-out; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
             40%, 80% { transform: translateX(8px); }
         }
     </style>
-    <!-- Cihaz ayarlarından bağımsız, her telefonda net Letonca okuma sağlayan kütüphane -->
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=8Mv2i4Z5"></script>
-</head>
 </head>
 <body>
 
 <div class="container" id="main-card">
-    <!-- Ayarlar Paneli -->
-    <div class="settings-panel">
-        <button id="toggle-tts" class="settings-btn active" onclick="toggleSetting('tts')">🔊 Okuma Açık</button>
-        <button id="toggle-sfx" class="settings-btn active" onclick="toggleSetting('sfx')">🎵 Sesler Açık</button>
+    <!-- Üst Kontrol ve Bilgi Çubuğu -->
+    <div class="top-bar">
+        <div id="streak-display" class="streak-badge" title="Günlük Çalışma Serisi">🔥 0 Gün</div>
+        <div class="right-controls">
+            <button id="toggle-theme" class="settings-btn" onclick="toggleTheme()">🌙 Mod</button>
+            <button id="toggle-sfx" class="settings-btn active" onclick="toggleSetting('sfx')">🎵 Sesler</button>
+        </div>
     </div>
 
     <!-- 1. YÜKLENİYOR EKRANI -->
     <div id="loading-container">
         <h2>Mani Lingo</h2>
-        <p>Veri havuzu yükleniyor, lütfen bekleyin...</p>
+        <p>Veri havuzu yükleniyor...</p>
     </div>
 
     <!-- 2. KURULUM / SEÇİM EKRANI -->
     <div id="setup-container" class="hidden">
         <h1>Mani Lingo Setup</h1>
         
-        <div class="subtitle">1. Öğrenme Dili Seçimi / Choose Language</div>
+        <div class="subtitle">1. Öğrenme Dili Seçimi</div>
         <div class="btn-group">
             <button id="btn-tr" class="lang-btn" onclick="setLangMode('tr')">Türkçe</button>
             <button id="btn-en" class="lang-btn" onclick="setLangMode('en')">English</button>
             <button id="btn-both" class="lang-btn" onclick="setLangMode('both')">English (Türkçe)</button>
         </div>
 
-        <div class="subtitle">2. Konu Seçimi / Select Topic</div>
+        <div class="subtitle">2. Konu Seçimi</div>
         <div id="topics-container" class="topic-list"></div>
     </div>
 
@@ -293,8 +339,11 @@
         <!-- Çoktan Seçmeli Alanı -->
         <div id="options-container" class="options-grid hidden"></div>
 
-        <!-- Metin Giriş Alanı -->
-        <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off" class="hidden">
+        <!-- Metin Giriş Alanı + İpucu Butonu -->
+        <div id="input-area" class="input-container hidden">
+            <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off">
+            <button id="hint-btn" class="hint-action-btn" onclick="revealLetterHint()" title="Harf İpucu Al">💡</button>
+        </div>
         
         <!-- Letonca Klavye Alanı -->
         <div id="keyboard-container" class="lv-keyboard hidden"></div>
@@ -329,14 +378,12 @@
     let score = 0;
     let selectedLangMode = 'tr';
     let currentTopicKey = '';
+    let hintCount = 0; // Harf ipucu sayacı
+    let isErrorMode = false; // Hata havuzu aktif mi?
 
-    // Ayarlar (Hafızadan yükle)
-    let settings = {
-        tts: localStorage.getItem('ml_tts') !== 'false',
-        sfx: localStorage.getItem('ml_sfx') !== 'false'
-    };
+    let settings = { sfx: localStorage.getItem('ml_sfx') !== 'false' };
 
-    // 🔊 Tarayıcı Ses Efektleri (Web Audio API ile dinamik bip sesleri)
+    // 🎵 Ses Efektleri (Bip sesleri)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
         if (!settings.sfx) return;
@@ -344,60 +391,60 @@
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         if (type === 'success') {
-            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
             gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.25);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
         } else if (type === 'error') {
-            osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-            osc.frequency.setValueAtTime(165, audioCtx.currentTime + 0.1); // E3
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(165, audioCtx.currentTime + 0.1);
             gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
-        }
-    }
-// 🗣️ Bulut Tabanlı Kesin Çözümlü Letonca Seslendirme Fonksiyonu
-    function speakLatvian(text) {
-        if (!settings.tts) return;
-        
-        // Önceki konuşmaları tamamen sustur
-        if (window.responsiveVoice) {
-            window.responsiveVoice.cancel();
-            
-            // Cihazda ne yüklü olursa olsun, doğrudan internet üzerinden 
-            // orijinal Letonca erkek sesiyle tane tane okutuyoruz.
-            window.responsiveVoice.speak(text, "Latvian Male", {
-                rate: 0.85,  // Anlaşılır olması için hafif yavaş
-                pitch: 1.0   // Ses tonu standardı
-            });
-        } else {
-            // Eğer internet anlık yavaşsa veya kütüphane yüklenemediyse eski güvenli motora dön
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'lv-LV';
-            utterance.rate = 0.8;
-            window.speechSynthesis.speak(utterance);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
         }
     }
 
-    // Bazı tarayıcılarda (Chrome gibi) ses listesi sayfa yüklendikten biraz sonra gelir.
-    // Bu yüzden seslerin arka planda dolmasını tetikliyoruz:
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    // 🌙 Tema Değiştirme (Dark Mode)
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('ml_theme', newTheme);
+        document.getElementById('toggle-theme').innerText = newTheme === 'dark' ? "☀️ Mod" : "🌙 Mod";
     }
 
-    // Ayarları Açma/Kapama
+    // Ses ayarı açma/kapama
     function toggleSetting(key) {
         settings[key] = !settings[key];
         localStorage.setItem(`ml_${key}`, settings[key]);
-        
         const btn = document.getElementById(`toggle-${key}`);
-        if (key === 'tts') btn.innerText = settings.tts ? "🔊 Okuma Açık" : "🔇 Okuma Kapalı";
-        if (key === 'sfx') btn.innerText = settings.sfx ? "🎵 Sesler Açık" : "🔕 Sesler Kapalı";
         btn.classList.toggle('active', settings[key]);
+    }
+
+    // 🔥 Streak (Günlük Seri) Algoritması
+    function updateStreak(isQuizFinished = false) {
+        const today = new Date().toDateString();
+        const lastVisit = localStorage.getItem('ml_last_visit');
+        let streak = parseInt(localStorage.getItem('ml_streak') || '0');
+
+        if (!lastVisit) {
+            if (isQuizFinished) streak = 1;
+        } else {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (lastVisit === yesterday.toDateString()) {
+                if (isQuizFinished) streak += 1;
+            } else if (lastVisit !== today) {
+                if (isQuizFinished) streak = 1; else streak = 0; // Gün atlandıysa sıfırla
+            }
+        }
+
+        if (isQuizFinished) {
+            localStorage.setItem('ml_last_visit', today);
+            localStorage.setItem('ml_streak', streak);
+        }
+        document.getElementById('streak-display').innerText = `🔥 ${streak} Gün`;
     }
 
     async function loadDatabase() {
@@ -406,18 +453,15 @@
             if (!response.ok) throw new Error("Veri dosyası bulunamadı");
             vocabularyDatabase = await response.json();
             
-            const savedLang = localStorage.getItem('mani_lingo_lang');
-            if (savedLang) selectedLangMode = savedLang;
-            
-            // Ayar buton metinlerini güncelle
-            document.getElementById('toggle-tts').innerText = settings.tts ? "🔊 Okuma Açık" : "🔇 Okuma Kapalı";
-            document.getElementById('toggle-tts').classList.toggle('active', settings.tts);
-            document.getElementById('toggle-sfx').innerText = settings.sfx ? "🎵 Sesler Açık" : "🔕 Sesler Kapalı";
+            // Ayarları yükle
+            if (localStorage.getItem('ml_theme') === 'dark') toggleTheme();
+            if (localStorage.getItem('mani_lingo_lang')) selectedLangMode = localStorage.getItem('mani_lingo_lang');
             document.getElementById('toggle-sfx').classList.toggle('active', settings.sfx);
-
+            
+            updateStreak(); // Girişte seriyi kontrol et
             showSetupScreen();
         } catch (error) {
-            document.getElementById("loading-container").innerText = "Hata: Canlı veri havuzu yüklenemedi!";
+            document.getElementById("loading-container").innerText = "Hata: Veri yüklenemedi!";
             console.error(error);
         }
     }
@@ -439,10 +483,8 @@
     function setLangMode(mode) {
         selectedLangMode = mode;
         localStorage.setItem('mani_lingo_lang', mode);
-        
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`btn-${mode}`).classList.add('active');
-        
         renderTopics();
     }
 
@@ -451,27 +493,28 @@
         if (!container) return;
         container.innerHTML = ""; 
 
-        const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
+        // 🟥 1. MADDE: Yanlış yapılan sorular sepeti butonu
+        const errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
+        if (errorPool.length > 0) {
+            const errBtn = document.createElement("button");
+            errBtn.className = "topic-btn error-pool-btn";
+            errBtn.innerHTML = `<span>🚨 Yanlış Yaptığım Sorularla Pratik Yap</span> <span class="topic-score">${errorPool.length} Soru</span>`;
+            errBtn.onclick = () => startTopic('__errors__');
+            container.appendChild(errBtn);
+        }
 
+        const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
         uniqueTopics.forEach(topicKey => {
             let buttonText = topicKey;
-            if (topicTranslations[topicKey]) {
-                buttonText = topicTranslations[topicKey][selectedLangMode];
-            }
+            if (topicTranslations[topicKey]) buttonText = topicTranslations[topicKey][selectedLangMode];
 
             const button = document.createElement("button");
             button.className = "topic-btn";
-            
-            const textSpan = document.createElement("span");
-            textSpan.innerText = buttonText;
-            button.appendChild(textSpan);
+            button.innerHTML = `<span>${buttonText}</span>`;
 
             const savedScoreData = localStorage.getItem(`mani_score_${topicKey}`);
             if (savedScoreData) {
-                const scoreSpan = document.createElement("span");
-                scoreSpan.className = "topic-score";
-                scoreSpan.innerText = `Skor: ${savedScoreData}`;
-                button.appendChild(scoreSpan);
+                button.innerHTML += `<span class="topic-score">Rekor: ${savedScoreData}</span>`;
             }
 
             button.onclick = () => startTopic(topicKey);
@@ -481,7 +524,16 @@
 
     function startTopic(selectedTopic) {
         currentTopicKey = selectedTopic;
-        let allTopicQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
+        let allTopicQuestions = [];
+
+        if (selectedTopic === '__errors__') {
+            allTopicQuestions = JSON.parse(localStorage.getItem('ml_errors') || '[]');
+            isErrorMode = true;
+        } else {
+            allTopicQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
+            isErrorMode = false;
+        }
+        
         if (allTopicQuestions.length === 0) return;
 
         allTopicQuestions.sort(() => Math.random() - 0.5);
@@ -493,11 +545,10 @@
         document.getElementById("setup-container").classList.add("hidden");
         document.getElementById("quiz-container").classList.remove("hidden");
         
-        buildKeyboard(); // Klavyeyi bir kez inşa et
+        buildKeyboard();
         showQuestion();
     }
 
-    // 🇱🇻 Letonca Klavye Butonlarını Üretme
     function buildKeyboard() {
         const kbContainer = document.getElementById("keyboard-container");
         kbContainer.innerHTML = "";
@@ -507,8 +558,7 @@
             btn.innerText = letter;
             btn.onclick = () => {
                 const input = document.getElementById("answer-input");
-                input.value += letter;
-                input.focus();
+                input.value += letter; input.focus();
             };
             kbContainer.appendChild(btn);
         });
@@ -521,6 +571,7 @@
         }
 
         const q = currentQuestions[currentIndex];
+        const inputArea = document.getElementById("input-area");
         const inputField = document.getElementById("answer-input");
         const submitBtn = document.getElementById("submit-btn");
         const optionsContainer = document.getElementById("options-container");
@@ -528,7 +579,8 @@
         const hintField = document.getElementById("hint");
         
         document.getElementById("feedback").innerText = "";
-        
+        hintCount = 0; // İpucunu sıfırla
+
         const progressPercent = (currentIndex / currentQuestions.length) * 100;
         document.getElementById("progress").style.width = `${progressPercent}%`;
 
@@ -538,17 +590,16 @@
 
         if (q.type === 'word') {
             document.getElementById("question").innerText = `Doğru Letonca kelimeyi seçin:`;
-            inputField.classList.add("hidden");
+            inputArea.classList.add("hidden");
             submitBtn.classList.add("hidden");
             kbContainer.classList.add("hidden");
             optionsContainer.classList.remove("hidden");
-            
             generateOptions(q);
         } else {
             optionsContainer.classList.add("hidden");
-            inputField.classList.remove("hidden");
+            inputArea.classList.remove("hidden");
             submitBtn.classList.remove("hidden");
-            kbContainer.classList.remove("hidden"); // Klavye açılır
+            kbContainer.classList.remove("hidden");
             
             inputField.value = "";
             inputField.focus();
@@ -559,23 +610,30 @@
             } else {
                 document.getElementById("question").innerText = `Bu ifadeyi Letonca yazın:`;
                 inputField.placeholder = "Cümleyi yazın...";
-                // Soru cümleyse, soruyu gösterirken seslendir
-                speakLatvian(q.lv);
             }
 
-            inputField.onkeypress = function(e) {
-                if (e.key === 'Enter') checkTextAnswer();
-            };
+            inputField.onkeypress = function(e) { if (e.key === 'Enter') checkTextAnswer(); };
+        }
+    }
+
+    // 💡 2. MADDE: Akıllı Harf İpucu Sistemi
+    function revealLetterHint() {
+        const q = currentQuestions[currentIndex];
+        const correctAnswer = (q.type === 'sentence' ? q.answer : q.lv);
+        const inputField = document.getElementById("answer-input");
+
+        if (hintCount < correctAnswer.length) {
+            hintCount++;
+            inputField.value = correctAnswer.substring(0, hintCount);
+            inputField.focus();
         }
     }
 
     function generateOptions(correctQuestion) {
         const optionsContainer = document.getElementById("options-container");
         optionsContainer.innerHTML = "";
-
         let pool = vocabularyDatabase.filter(item => item.type === 'word' && item.lv !== correctQuestion.lv);
         pool.sort(() => Math.random() - 0.5);
-        
         let choices = pool.slice(0, 3).map(item => item.lv);
         choices.push(correctQuestion.lv);
         choices.sort(() => Math.random() - 0.5);
@@ -584,16 +642,11 @@
             const btn = document.createElement("button");
             btn.className = "option-btn";
             btn.innerText = choiceText;
-            btn.onclick = () => {
-                // Şık tıklandığında kelimeyi seslendir
-                speakLatvian(choiceText);
-                verifyAnswer(choiceText, correctQuestion.lv);
-            };
+            btn.onclick = () => verifyAnswer(choiceText, correctQuestion);
             optionsContainer.appendChild(btn);
         });
     }
 
-    // 🎯 2. MADDE: Tolerans Kontrolü (Fuzzy Matching) Algoritması
     function cleanAksan(str) {
         return str.replace(/ā/g, 'a').replace(/č/g, 'c').replace(/ē/g, 'e')
                   .replace(/ģ/g, 'g').replace(/ī/g, 'i').replace(/ķ/g, 'k')
@@ -601,25 +654,37 @@
                   .replace(/ū/g, 'u').replace(/ž/g, 'z');
     }
 
-    function verifyAnswer(selected, correct) {
+    // Sepete Yanlış Soru Ekleme/Çıkarma Yardımcısı
+    function handleErrorsPool(question, isCorrect) {
+        let errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
+        if (isCorrect) {
+            // Eğer doğru bildiyse ve hata havuzundaysa sil
+            errorPool = errorPool.filter(item => !(item.lv === question.lv && item.topic === question.topic));
+        } else {
+            // Yanlış bildiyse ve havuzda yoksa ekle
+            const exist = errorPool.some(item => item.lv === question.lv && item.topic === question.topic);
+            if (!exist) errorPool.push(question);
+        }
+        localStorage.setItem('ml_errors', JSON.stringify(errorPool));
+    }
+
+    function verifyAnswer(selected, qObj) {
         const feedbackField = document.getElementById("feedback");
         const card = document.getElementById("main-card");
 
-        if (selected.toLowerCase() === correct.toLowerCase()) {
-            score++;
-            playSound('success');
+        if (selected.toLowerCase() === qObj.lv.toLowerCase()) {
+            score++; playSound('success');
             feedbackField.className = "feedback success";
             feedbackField.innerText = "Pareizi! (Doğru) 🌟";
+            handleErrorsPool(qObj, true);
         } else {
-            playSound('error');
-            card.classList.add('shake');
+            playSound('error'); card.classList.add('shake');
             setTimeout(() => card.classList.remove('shake'), 400);
-
             feedbackField.className = "feedback error";
-            feedbackField.innerText = `Nepareizi! Doğru cevap: ${correct}`;
+            feedbackField.innerText = `Nepareizi! Doğru cevap: ${qObj.lv}`;
+            handleErrorsPool(qObj, false);
         }
-        currentIndex++;
-        setTimeout(showQuestion, 1600);
+        currentIndex++; setTimeout(showQuestion, 1600);
     }
 
     function checkTextAnswer() {
@@ -629,56 +694,53 @@
         const feedbackField = document.getElementById("feedback");
         const card = document.getElementById("main-card");
 
-        // Kelimeyi doğrulamadan önce seslendir
-        speakLatvian(correctAnswer);
-
         if (userInput === correctAnswer) {
-            score++;
+            // Harf ipucu kullandıysa yarım puan, kullanmadıysa tam puan
+            score += (hintCount > 0) ? 0.5 : 1;
             playSound('success');
             feedbackField.className = "feedback success";
-            feedbackField.innerText = "Pareizi! (Doğru) 🌟";
+            feedbackField.innerText = (hintCount > 0) ? "Doğru (İpucu kullandınız 💡)" : "Pareizi! (Doğru) 🌟";
+            handleErrorsPool(q, true);
         } else if (cleanAksan(userInput) === cleanAksan(correctAnswer)) {
-            // Aksan/Uzatma işareti hatası yakalandı (Neredeyse Doğru!)
-            score++; // Yarım puan yerine tam puan (Duolingo tarzı tolerans)
+            // 2. MADDE: Tolerans Kontrolü
+            score += (hintCount > 0) ? 0.5 : 1;
             playSound('success');
             feedbackField.className = "feedback warning";
-            feedbackField.innerText = `Neredeyse doğru! Harflerin işaretlerine dikkat et: ${correctAnswer} ✍️`;
+            feedbackField.innerText = `Neredeyse doğru! İşaretlere dikkat: ${correctAnswer} ✍️`;
+            handleErrorsPool(q, true);
         } else {
-            playSound('error');
-            card.classList.add('shake');
+            playSound('error'); card.classList.add('shake');
             setTimeout(() => card.classList.remove('shake'), 400);
-
             feedbackField.className = "feedback error";
             feedbackField.innerText = `Nepareizi! Doğru cevap: ${correctAnswer}`;
+            handleErrorsPool(q, false);
         }
 
-        currentIndex++;
-        setTimeout(showQuestion, 2000); // Uyarıyı okuyabilmesi için biraz daha uzun süre bekletiyoruz
+        currentIndex++; setTimeout(showQuestion, 2000);
     }
 
     function finishQuiz() {
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.remove("hidden");
         document.getElementById("score-text").innerText = 
-            `25 soru içerisinden ${score} doğru cevap verdiniz!`;
+            `${currentQuestions.length} soru içerisinden ${score} puan topladınız!`;
 
-        const currentScoreString = `${score}/25`;
-        const existingRecord = localStorage.getItem(`mani_score_${currentTopicKey}`);
-
-        if (existingRecord) {
-            const oldCorrect = parseInt(existingRecord.split('/')[0]);
-            if (score > oldCorrect) {
+        if (!isErrorMode) {
+            const currentScoreString = `${score}/${currentQuestions.length}`;
+            const existingRecord = localStorage.getItem(`mani_score_${currentTopicKey}`);
+            if (existingRecord) {
+                const oldCorrect = parseFloat(existingRecord.split('/')[0]);
+                if (score > oldCorrect) localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
+            } else {
                 localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
             }
-        } else {
-            localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
         }
+        
+        updateStreak(true); // Test başarıyla bittiğinde seriyi artır
     }
 
     function exitQuiz() {
-        if (confirm("Testten çıkmak istediğinize emin misiniz?")) {
-            showSetupScreen();
-        }
+        if (confirm("Testten çıkmak istediğinize emin misiniz?")) showSetupScreen();
     }
 </script>
 
