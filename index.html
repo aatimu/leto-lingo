@@ -149,6 +149,26 @@
             font-style: italic;
         }
 
+        /* Çoktan Seçmeli Şık Izgarası */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            background: #fdfdfd;
+        }
+
+        .option-btn:hover {
+            background: #f0f7ff;
+            border-color: var(--primary);
+        }
+
         input[type="text"] {
             width: 100%;
             padding: 14px;
@@ -205,10 +225,14 @@
         <div id="question" class="question-box"></div>
         <div id="hint" class="hint-box"></div>
         
-        <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off">
+        <!-- Çoktan Seçmeli Alanı -->
+        <div id="options-container" class="options-grid hidden"></div>
+
+        <!-- Metin Giriş Alanı -->
+        <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off" class="hidden">
         
         <div class="btn-group">
-            <button onclick="checkAnswer()" style="background: var(--primary); color: white; border: none;">Kontrol Et</button>
+            <button id="submit-btn" onclick="checkTextAnswer()" style="background: var(--primary); color: white; border: none;" class="hidden">Kontrol Et</button>
             <button onclick="exitQuiz()" style="background: #eee; border: none;">Çıkış</button>
         </div>
         <div id="feedback" class="feedback"></div>
@@ -246,7 +270,7 @@
     let currentIndex = 0;
     let score = 0;
     let selectedLangMode = 'tr';
-    let currentTopicKey = ''; // Aktif oynanan konuyu akılda tutmak için
+    let currentTopicKey = '';
 
     async function loadDatabase() {
         try {
@@ -254,11 +278,8 @@
             if (!response.ok) throw new Error("Veri dosyası bulunamadı");
             vocabularyDatabase = await response.json();
             
-            // 💾 LOCALSTORAGE: Hafızadaki kayıtlı dil modunu yükle, yoksa varsayılan 'tr' yap
             const savedLang = localStorage.getItem('mani_lingo_lang');
-            if (savedLang) {
-                selectedLangMode = savedLang;
-            }
+            if (savedLang) selectedLangMode = savedLang;
             
             showSetupScreen();
         } catch (error) {
@@ -274,7 +295,6 @@
         document.getElementById("result-container").classList.add("hidden");
         document.getElementById("setup-container").classList.remove("hidden");
         
-        // Dil butonlarının aktifliğini hafızaya göre güncelle
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`btn-${selectedLangMode}`);
         if(activeBtn) activeBtn.classList.add('active');
@@ -284,13 +304,10 @@
 
     function setLangMode(mode) {
         selectedLangMode = mode;
-        
-        // 💾 LOCALSTORAGE: Seçilen dili hafızaya kaydet
         localStorage.setItem('mani_lingo_lang', mode);
         
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        const activeBtn = document.getElementById(`btn-${mode}`);
-        if(activeBtn) activeBtn.classList.add('active');
+        document.getElementById(`btn-${mode}`).classList.add('active');
         
         renderTopics();
     }
@@ -299,8 +316,6 @@
         const container = document.getElementById("topics-container");
         if (!container) return;
         container.innerHTML = ""; 
-
-        if (vocabularyDatabase.length === 0) return;
 
         const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
 
@@ -313,17 +328,15 @@
             const button = document.createElement("button");
             button.className = "topic-btn";
             
-            // Konu metnini sol tarafa ekle
             const textSpan = document.createElement("span");
             textSpan.innerText = buttonText;
             button.appendChild(textSpan);
 
-            // 💾 LOCALSTORAGE: Bu konunun skor kaydı var mı kontrol et
             const savedScoreData = localStorage.getItem(`mani_score_${topicKey}`);
             if (savedScoreData) {
                 const scoreSpan = document.createElement("span");
                 scoreSpan.className = "topic-score";
-                scoreSpan.innerText = `Skor: ${savedScoreData}`; // Örn: "Skor: 8/10"
+                scoreSpan.innerText = `Skor: ${savedScoreData}`;
                 button.appendChild(scoreSpan);
             }
 
@@ -333,23 +346,23 @@
     }
 
     function startTopic(selectedTopic) {
-        currentTopicKey = selectedTopic; // Hangi konunun oynandığını kaydet
-        currentQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
+        currentTopicKey = selectedTopic;
+        let allTopicQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
         
-        if (currentQuestions.length === 0) return;
+        if (allTopicQuestions.length === 0) return;
 
-        currentQuestions.sort(() => Math.random() - 0.5);
+        // 🎯 1. Tüm havuzu tamamen karıştırıyoruz
+        allTopicQuestions.sort(() => Math.random() - 0.5);
+        
+        // 🎯 2. İçinden SADECE 25 tanesini cımbızla çekip teste alıyoruz
+        currentQuestions = allTopicQuestions.slice(0, 25);
+        
         currentIndex = 0;
         score = 0;
 
         document.getElementById("setup-container").classList.add("hidden");
         document.getElementById("quiz-container").classList.remove("hidden");
-        document.getElementById("feedback").innerText = "";
         
-        document.getElementById("answer-input").onkeypress = function(e) {
-            if (e.key === 'Enter') checkAnswer();
-        };
-
         showQuestion();
     }
 
@@ -361,36 +374,98 @@
 
         const q = currentQuestions[currentIndex];
         const inputField = document.getElementById("answer-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const optionsContainer = document.getElementById("options-container");
         const hintField = document.getElementById("hint");
         
-        inputField.value = "";
-        inputField.focus();
         document.getElementById("feedback").innerText = "";
-
+        
+        // İlerleme çubuğu
         const progressPercent = (currentIndex / currentQuestions.length) * 100;
         document.getElementById("progress").style.width = `${progressPercent}%`;
 
-        if (selectedLangMode === 'tr') {
-            hintField.innerText = `Anlamı: ${q.tr}`;
-        } else if (selectedLangMode === 'en') {
-            hintField.innerText = `Meaning: ${q.en}`;
-        } else {
-            hintField.innerText = `Meaning: ${q.en} (${q.tr})`;
-        }
+        // İpucu Dili Ayarı
+        if (selectedLangMode === 'tr') hintField.innerText = `Anlamı: ${q.tr}`;
+        else if (selectedLangMode === 'en') hintField.innerText = `Meaning: ${q.en}`;
+        else hintField.innerText = `Meaning: ${q.en} (${q.tr})`;
 
+        // 🎯 SORU TİPLERİNE GÖRE ARAYÜZÜ SEÇME
         if (q.type === 'word') {
-            document.getElementById("question").innerText = `Letonca karşılığı nedir?`;
-            inputField.placeholder = "Kelimeyi yazın...";
-        } else if (q.type === 'sentence') {
-            document.getElementById("question").innerText = q.questionPattern;
-            inputField.placeholder = "Boşluğu doldurun...";
+            // ÇOKTAN SEÇMELİ TEST MODU (Word tipi için 4 şık üret)
+            document.getElementById("question").innerText = `Doğru Letonca kelimeyi seçin:`;
+            inputField.classList.add("hidden");
+            submitBtn.classList.add("hidden");
+            optionsContainer.classList.remove("hidden");
+            
+            generateOptions(q);
+        } else {
+            // KLASİK YAZMA MODU (Sentence ve Doldurma Tipleri İçin)
+            optionsContainer.classList.add("hidden");
+            inputField.classList.remove("hidden");
+            submitBtn.classList.remove("hidden");
+            
+            inputField.value = "";
+            inputField.focus();
+            
+            if (q.type === 'sentence') {
+                document.getElementById("question").innerText = q.questionPattern;
+                inputField.placeholder = "Boşluğu doldurun...";
+            } else {
+                document.getElementById("question").innerText = `Bu ifadeyi Letonca yazın:`;
+                inputField.placeholder = "Cümleyi yazın...";
+            }
+
+            inputField.onkeypress = function(e) {
+                if (e.key === 'Enter') checkTextAnswer();
+            };
         }
     }
 
-    function checkAnswer() {
+    // Çoktan seçmeli şıkları dinamik üreten akıllı fonksiyon
+    function generateOptions(correctQuestion) {
+        const optionsContainer = document.getElementById("options-container");
+        optionsContainer.innerHTML = "";
+
+        // Yanlış şıkları üretmek için havuzdan diğer kelimeleri topla
+        let pool = vocabularyDatabase.filter(item => item.type === 'word' && item.lv !== correctQuestion.lv);
+        pool.sort(() => Math.random() - 0.5);
+        
+        // 3 adet benzersiz yanlış şık seç
+        let choices = pool.slice(0, 3).map(item => item.lv);
+        // Doğru şıkkı ekle
+        choices.push(correctQuestion.lv);
+        // Hepsini karıştır
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach(choiceText => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = choiceText;
+            btn.onclick = () => verifyAnswer(choiceText, correctQuestion.lv);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // Şıklı sorularda cevabı kontrol eder
+    function verifyAnswer(selected, correct) {
+        const feedbackField = document.getElementById("feedback");
+        if (selected.toLowerCase() === correct.toLowerCase()) {
+            score++;
+            feedbackField.className = "feedback success";
+            feedbackField.innerText = "Pareizi! (Doğru) 🌟";
+        } else {
+            feedbackField.className = "feedback error";
+            feedbackField.innerText = `Nepareizi! Doğru cevap: ${correct}`;
+        }
+        currentIndex++;
+        setTimeout(showQuestion, 1500);
+    }
+
+    // Klavyeden girilen yazılı soruları kontrol eder
+    function checkTextAnswer() {
         const q = currentQuestions[currentIndex];
         const userInput = document.getElementById("answer-input").value.trim().toLowerCase();
-        const correctAnswer = (q.type === 'word' ? q.lv : q.answer).trim().toLowerCase();
+        const correctAnswer = (q.type === 'sentence' ? q.answer : q.lv).trim().toLowerCase();
         const feedbackField = document.getElementById("feedback");
 
         if (userInput === correctAnswer) {
@@ -410,20 +485,17 @@
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.remove("hidden");
         document.getElementById("score-text").innerText = 
-            `${currentQuestions.length} soru içerisinden ${score} doğru cevap verdiniz!`;
+            `25 soru içerisinden ${score} doğru cevap verdiniz!`;
 
-        // 💾 LOCALSTORAGE: Skor kaydetme mantığı
-        const currentScoreString = `${score}/${currentQuestions.length}`;
+        const currentScoreString = `${score}/25`;
         const existingRecord = localStorage.getItem(`mani_score_${currentTopicKey}`);
 
         if (existingRecord) {
-            // Eğer daha önce oynandıysa, sadece daha yüksek olan skoru koru
             const oldCorrect = parseInt(existingRecord.split('/')[0]);
             if (score > oldCorrect) {
                 localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
             }
         } else {
-            // İlk kez oynanıyorsa direkt kaydet
             localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
         }
     }
