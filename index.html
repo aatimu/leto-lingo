@@ -356,15 +356,42 @@
             osc.stop(audioCtx.currentTime + 0.3);
         }
     }
-
-    // 🗣️ Letonca Seslendirme Fonksiyonu (TTS)
+// 🗣️ Gelişmiş Letonca Seslendirme Fonksiyonu (TTS)
     function speakLatvian(text) {
         if (!settings.tts) return;
         window.speechSynthesis.cancel(); // Önceki sesleri sustur
+
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'lv-LV';
-        utterance.rate = 0.85; // Hafif yavaş ve anlaşılır okuma
+        
+        // Sistemdeki tüm yüklü sesleri tara
+        const voices = window.speechSynthesis.getVoices();
+        
+        // İçinde "lv" (Letonca) geçen en uygun sesi bulmaya çalış
+        const latvianVoice = voices.find(voice => 
+            voice.lang.toLowerCase().includes('lv') || 
+            voice.name.toLowerCase().includes('latvia')
+        );
+
+        if (latvianVoice) {
+            utterance.voice = latvianVoice; // Gerçek Letonca sesi bulduysak ata
+            utterance.lang = latvianVoice.lang;
+        } else {
+            // ⚠️ Eğer cihazda/tarayıcıda HİÇ Letonca ses paketi yüklü değilse:
+            // İngilizce gibi saçma okumaması için dili zorla ve hızı yavaşlat
+            utterance.lang = 'lv-LV';
+            console.warn("Sistemde yerel Letonca ses paketi bulunamadı, varsayılan motor deneniyor.");
+        }
+
+        utterance.rate = 0.75; // Telaffuzun net anlaşılması için hızı biraz daha yavaşlattık
+        utterance.pitch = 1.0; // Ses tonunun kalınlaşmasını engellemek için standarda sabitledik
+        
         window.speechSynthesis.speak(utterance);
+    }
+
+    // Bazı tarayıcılarda (Chrome gibi) ses listesi sayfa yüklendikten biraz sonra gelir.
+    // Bu yüzden seslerin arka planda dolmasını tetikliyoruz:
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     }
 
     // Ayarları Açma/Kapama
