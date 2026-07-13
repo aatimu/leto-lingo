@@ -1,412 +1,406 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="lv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mani Lingo - Letonca</title>
+    <title>Mani Lingo - Letonca Öğren</title>
     <style>
+        :root {
+            --primary: #00a2ff;
+            --primary-dark: #0082cc;
+            --bg: #f5f7fb;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --success: #2ecc71;
+            --error: #e74c3c;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f9fa;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
         }
-        .card {
-            background: white;
+
+        .container {
+            background: var(--card-bg);
+            max-width: 600px;
+            width: 100%;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            width: 90%;
-            max-width: 500px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
             text-align: center;
         }
-        .progress-bar {
-            width: 100%;
-            background: #e0e0e0;
-            height: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow: hidden;
+
+        h1, h2 {
+            margin-top: 0;
+            color: #111;
         }
+
+        .subtitle {
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Buton Grubu Stilleri */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            border-color: var(--primary);
+            background: rgba(0, 162, 255, 0.05);
+        }
+
+        /* Aktif Dil Butonu */
+        .lang-btn.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 162, 255, 0.3);
+        }
+
+        /* Dikey Konu Listesi */
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .topic-btn {
+            width: 100%;
+            text-align: left;
+            padding: 16px 20px;
+            background: #fafafa;
+        }
+
+        .topic-btn:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* Quiz Arayüz Elemanları */
+        .progress-bar {
+            height: 8px;
+            width: 100%;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
         .progress {
             height: 100%;
-            background: #58cc02;
+            background: var(--primary);
             width: 0%;
             transition: width 0.3s ease;
         }
-        .question {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #3c3c3c;
+
+        .question-box {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #111;
         }
-        .hint-text {
-            font-size: 15px;
-            color: #777;
-            margin-top: -10px;
-            margin-bottom: 20px;
+
+        .hint-box {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
             font-style: italic;
         }
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .btn {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 2px solid #e5e5e5;
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
             border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        .btn:hover { background: #f1f1f1; }
-        .btn.selected-mode {
-            background: #1cb0f6;
-            color: white;
-            border-color: #1cb0f6;
-        }
-        .input-text {
-            width: 90%;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #e5e5e5;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 20px;
             text-align: center;
         }
-        .input-text:focus { border-color: #84d8ff; }
-        .feedback { margin-top: 15px; font-weight: bold; font-size: 18px; min-height: 24px; }
-        .correct { color: #58cc02; }
-        .wrong { color: #ea2b2b; }
-        .action-btn {
-            margin-top: 20px;
-            background: #1cb0f6;
-            color: white;
-            border: none;
-            width: 100%;
-            box-shadow: 0 4px 0 #1899d6;
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
         }
-        .action-btn:hover { background: #1fa4e3; }
-        .hidden { display: none; }
-        .section-title { margin-top: 15px; margin-bottom: 10px; color: #6c6c6c; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
-        .loading { font-size: 18px; color: #6c6c6c; }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .feedback.success { color: var(--success); }
+        .feedback.error { color: var(--error); }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <!-- Yükleniyor Ekranı -->
-    <div id="loading-container" class="loading">Veri havuzu yükleniyor...</div>
+<div class="container">
+    <!-- 1. YÜKLENİYOR EKRANI -->
+    <div id="loading-container">
+        <h2>Mani Lingo</h2>
+        <p>Veri havuzu yükleniyor, lütfen bekleyin...</p>
+    </div>
 
-    <!-- Kurulum / Seçim Ekranı -->
+    <!-- 2. KURULUM / SEÇİM EKRANI -->
     <div id="setup-container" class="hidden">
-        <h2>Mani Lingo Setup</h2>
+        <h1>Mani Lingo Setup</h1>
         
-        <div class="section-title">1. Öğrenme Dili Seçimi</div>
-        <div class="options-container" style="flex-direction: row; justify-content: center;">
-            <button class="btn" id="lang-tr" onclick="setLangMode('tr')">Türkçe</button>
-            <button class="btn" id="lang-en" onclick="setLangMode('en')">English</button>
-            <button class="btn" id="lang-both" onclick="setLangMode('both')">English (Türkçe)</button>
+        <div class="subtitle">1. Öğrenme Dili Seçimi / Choose Language</div>
+        <div class="btn-group">
+            <button id="btn-tr" class="lang-btn active" onclick="setLangMode('tr')">Türkçe</button>
+            <button id="btn-en" class="lang-btn" onclick="setLangMode('en')">English</button>
+            <button id="btn-both" class="lang-btn" onclick="setLangMode('both')">English (Türkçe)</button>
         </div>
 
-        <div id="setup-container" class="hidden">
-    <h2>Lūdzu, izvēlieties tēmu / Lütfen bir konu seçin:</h2>
-    <div class="button-grid">
-        <button onclick="startTopic('Selamlaşma ve Tanışma')">Selamlaşma ve Tanışma</button>
-        <button onclick="startTopic('Meslekler ve Günlük Hayat')">Meslekler ve Günlük Hayat</button>
-        <button onclick="startTopic('Sayılar ve İletişim')">Sayılar ve İletişim</button>
-    </div>
-</div>
-
-    <!-- Oyun Ekranı -->
-    <div id="game-container" class="hidden">
-        <div class="progress-bar"><div class="progress" id="progress"></div></div>
-        <div class="question" id="question-text">Soru yükleniyor...</div>
-        <div class="hint-text" id="hint-text"></div>
-        
-        <!-- Çoktan Seçmeli -->
-        <div id="multiple-choice" class="options-container"></div>
-        
-        <!-- Yazma / Boşluk Doldurma -->
-        <div id="writing-choice" class="hidden">
-            <input type="text" id="writing-input" class="input-text" placeholder="Boşluğu doldurun..." autocomplete="off">
+        <div class="subtitle">2. Konu Seçimi / Select Topic</div>
+        <div id="topics-container" class="topic-list">
+            <!-- Konu butonları buraya dinamik gelecek -->
         </div>
-        
-        <div class="feedback" id="feedback"></div>
-        <button class="btn action-btn" id="next-btn" onclick="checkAnswer()">Kontrol Et</button>
     </div>
 
-    <!-- Sonuç Ekranı -->
+    <!-- 3. QUIZ EKRANI -->
+    <div id="quiz-container" class="hidden">
+        <div class="progress-bar"><div id="progress" class="progress"></div></div>
+        <div id="question" class="question-box"></div>
+        <div id="hint" class="hint-box"></div>
+        
+        <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off">
+        
+        <div class="btn-group">
+            <button onclick="checkAnswer()" style="background: var(--primary); color: white; border: none;">Kontrol Et</button>
+            <button onclick="exitQuiz()" style="background: #eee; border: none;">Çıkış</button>
+        </div>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <!-- 4. SONUÇ EKRANI -->
     <div id="result-container" class="hidden">
         <h2>Tebrikler! 🎉</h2>
-        <p>Bu oturumu başarıyla tamamladın.</p>
-        <button class="btn action-btn" onclick="backToSetup()">Ana Menüye Dön</button>
+        <p id="score-text"></p>
+        <button onclick="showSetupScreen()" style="background: var(--primary); color: white; border: none;">Ana Menüye Dön</button>
     </div>
 </div>
 
 <script>
-    let vocabularyDatabase = []; // JSON'dan dolacak
-    let langMode = 'tr';
-    let activeLevelPool = [];
-    let generatedQuestions = [];
-    let currentIndex = 0;
-    let isAnswered = false;
-    let selectedAnswer = "";
+    // Konu Başlıkları Sözlüğü (Dil seçimine göre buton isimlerini değiştirir)
+    const topicTranslations = {
+        'Selamlaşma ve Tanışma': {
+            tr: 'Selamlaşma ve Tanışma',
+            en: 'Greetings and Introductions',
+            both: 'Greetings and Introductions (Selamlaşma ve Tanışma)'
+        },
+        'Meslekler ve Günlük Hayat': {
+            tr: 'Meslekler ve Günlük Hayat',
+            en: 'Occupations and Daily Life',
+            both: 'Occupations and Daily Life (Meslekler ve Günlük Hayat)'
+        },
+        'Sayılar ve İletişim': {
+            tr: 'Sayılar ve İletişim',
+            en: 'Numbers and Communication',
+            both: 'Numbers and Communication (Sayılar ve İletişim)'
+        }
+    };
 
-    // UYGULAMA BAŞLANGICI: JSON Dosyasını oku
-    async function loadDatabase() {
+    let vocabularyDatabase = [];
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let selectedLangMode = 'tr';
+    let currentTopicGlobal = '';
+
+    // Sayfa açıldığında JSON dosyasını çek
+    window.onload = async function loadDatabase() {
         try {
-            // Başına hiçbir URL koymadan, sadece dosya adını yazıyoruz.
-            // Vercel siten canlıya çıktığında bunu otomatik olarak kendi klasöründen okuyacaktır.
+            // Canlıda Vercel üzerindeki questions.json'ı okur
             const response = await fetch('./questions.json');
-            if (!response.ok) throw new Error("Dosya bulunamadı veya okunamadı");
+            if (!response.ok) throw new Error("Veri dosyası bulunamadı");
             vocabularyDatabase = await response.json();
             
-            document.getElementById("loading-container").classList.add("hidden");
-            document.getElementById("setup-container").classList.remove("hidden");
-            setLangMode('tr');
+            showSetupScreen();
         } catch (error) {
             document.getElementById("loading-container").innerText = "Hata: Canlı veri havuzu yüklenemedi!";
             console.error(error);
         }
-   // 1. Tanımlı Konu Başlıkları Sözlüğü
-const topicTranslations = {
-    'Selamlaşma ve Tanışma': {
-        tr: 'Selamlaşma ve Tanışma',
-        en: 'Greetings and Introductions',
-        both: 'Greetings and Introductions (Selamlaşma ve Tanışma)'
-    },
-    'Meslekler ve Günlük Hayat': {
-        tr: 'Meslekler ve Günlük Hayat',
-        en: 'Occupations and Daily Life',
-        both: 'Occupations and Daily Life (Meslekler ve Günlük Hayat)'
-    },
-    'Sayılar ve İletişim': {
-        tr: 'Sayılar ve İletişim',
-        en: 'Numbers and Communication',
-        both: 'Numbers and Communication (Sayılar ve İletişim)'
-    }
-};
+    };
 
-let selectedLangMode = 'tr'; // Varsayılan mod
-
-// 2. Dil Butonlarına Tıklanınca Tetiklenecek Fonksiyon
-function setLangMode(mode) {
-    selectedLangMode = mode;
-    
-    // Aktif buton görsel stilini güncellemek için (Mavi arka plan sınıfı)
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    // HTML'deki butonlarına id veya class verdiysen ona göre seçebilirsin
-    // Örn: document.getElementById(`btn-${mode}`).classList.add('active');
-
-    // Konu listesini seçilen dile göre ekrana bas
-    renderTopics();
-}
-
-// 3. Konuları Ekrana Dinamik Basan Fonksiyon
-function renderTopics() {
-    // JSON'daki benzersiz (unique) konu isimlerini topla
-    const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
-    
-    const container = document.getElementById("topics-container");
-    container.innerHTML = ""; // İçeriği temizle
-    
-    uniqueTopics.forEach(topicKey => {
-        // Sözlükten çeviriyi al, yoksa JSON'daki orijinal anahtarı kullan
-        let buttonText = topicKey;
-        if (topicTranslations[topicKey]) {
-            buttonText = topicTranslations[topicKey][selectedLangMode];
-        }
-        
-        // Butonu oluştur
-        const button = document.createElement("button");
-        button.className = "topic-btn";
-        button.innerText = buttonText;
-        
-        // Tıklandığında oyun fonksiyonunu JSON'daki orijinal anahtarla tetikle
-        button.onclick = () => startTopic(topicKey);
-        
-        container.appendChild(button);
-    });
-}
-    function getTranslation(item) {
-        if (langMode === 'tr') return item.tr;
-        if (langMode === 'en') return item.en;
-        if (langMode === 'both') return `${item.en} (${item.tr})`;
-    }
-
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    function startApp(level) {
-        activeLevelPool = vocabularyDatabase.filter(w => w.level === level);
-        
-        if (activeLevelPool.length === 0) {
-            alert(`Bu seviyede henüz soru yok.`);
-            return;
-        }
-
-        generatedQuestions = [];
-        const wordPool = activeLevelPool.filter(item => item.type === "word");
-
-        activeLevelPool.forEach(item => {
-            if (item.type === "word") {
-                const questionType = Math.random() > 0.5 ? "multiple" : "writing";
-                const correctAnswer = questionType === "multiple" ? getTranslation(item) : item.lv;
-                const questionText = questionType === "multiple" 
-                    ? `"${item.lv}" ne anlama gelir?` 
-                    : `"${getTranslation(item)}" kelimesinin Letoncasını yazın:`;
-
-                let options = [];
-                if (questionType === "multiple" && wordPool.length >= 4) {
-                    options.push(correctAnswer);
-                    let wrongPool = wordPool.filter(w => w.lv !== item.lv);
-                    shuffle(wrongPool);
-                    for (let i = 0; i < Math.min(3, wrongPool.length); i++) {
-                        options.push(getTranslation(wrongPool[i]));
-                    }
-                    options = shuffle(options);
-                } else {
-                    generatedQuestions.push({
-                        type: "writing",
-                        question: `"${getTranslation(item)}" kelimesinin Letoncasını yazın:`,
-                        hint: "",
-                        answer: item.lv
-                    });
-                    return;
-                }
-
-                generatedQuestions.push({
-                    type: questionType,
-                    question: questionText,
-                    hint: "",
-                    options: options,
-                    answer: correctAnswer
-                });
-
-            } else if (item.type === "sentence") {
-                generatedQuestions.push({
-                    type: "writing",
-                    question: item.questionPattern,
-                    hint: `Anlamı: ${getTranslation(item)}`,
-                    answer: item.answer
-                });
-            }
-        });
-
-        generatedQuestions = shuffle(generatedQuestions);
-        currentIndex = 0;
-
-        document.getElementById("setup-container").classList.add("hidden");
-        document.getElementById("game-container").classList.remove("hidden");
-        
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        if (currentIndex >= generatedQuestions.length) {
-            document.getElementById("game-container").classList.add("hidden");
-            document.getElementById("result-container").classList.remove("hidden");
-            return;
-        }
-
-        isAnswered = false;
-        selectedAnswer = "";
-        document.getElementById("feedback").innerText = "";
-        document.getElementById("next-btn").innerText = "Kontrol Et";
-        
-        const progressPercent = (currentIndex / generatedQuestions.length) * 100;
-        document.getElementById("progress").style.width = progressPercent + "%";
-
-        const currentQuestion = generatedQuestions[currentIndex];
-        document.getElementById("question-text").innerText = currentQuestion.question;
-        document.getElementById("hint-text").innerText = currentQuestion.hint || "";
-
-        if (currentQuestion.type === "multiple") {
-            document.getElementById("multiple-choice").classList.remove("hidden");
-            document.getElementById("writing-choice").classList.add("hidden");
-            
-            const optionsDiv = document.getElementById("multiple-choice");
-            optionsDiv.innerHTML = "";
-            
-            currentQuestion.options.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.className = "btn";
-                btn.innerText = opt;
-                btn.onclick = () => selectOption(btn);
-                optionsDiv.appendChild(btn);
-            });
-        } else if (currentQuestion.type === "writing") {
-            document.getElementById("multiple-choice").classList.add("hidden");
-            document.getElementById("writing-choice").classList.remove("hidden");
-            document.getElementById("writing-input").value = "";
-            document.getElementById("writing-input").focus();
-        }
-    }
-
-    function selectOption(button) {
-        if(isAnswered) return;
-        const buttons = document.querySelectorAll("#multiple-choice .btn");
-        buttons.forEach(b => b.style.borderColor = "#e5e5e5");
-        button.style.borderColor = "#1cb0f6";
-        selectedAnswer = button.innerText;
-    }
-
-    function checkAnswer() {
-        if (isAnswered) {
-            currentIndex++;
-            loadQuestion();
-            return;
-        }
-
-        const currentQuestion = generatedQuestions[currentIndex];
-        let userAnswer = "";
-        const feedbackDiv = document.getElementById("feedback");
-
-        if (currentQuestion.type === "multiple") {
-            userAnswer = selectedAnswer;
-        } else if (currentQuestion.type === "writing") {
-            userAnswer = document.getElementById("writing-input").value.trim();
-        }
-
-        if (!userAnswer) {
-            feedbackDiv.className = "feedback wrong";
-            feedbackDiv.innerText = "Lütfen boşluğu doldurun veya bir şık seçin!";
-            return;
-        }
-
-        if (userAnswer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
-            feedbackDiv.className = "feedback correct";
-            feedbackDiv.innerText = "Mükemmel! 🎉";
-            document.getElementById("progress").style.width = ((currentIndex + 1) / generatedQuestions.length) * 100 + "%";
-        } else {
-            feedbackDiv.className = "feedback wrong";
-            feedbackDiv.innerText = `Yanış! Doğru cevap: ${currentQuestion.answer}`;
-        }
-
-        isAnswered = true;
-        document.getElementById("next-btn").innerText = "Devam Et";
-    }
-
-    function backToSetup() {
+    function showSetupScreen() {
+        document.getElementById("loading-container").classList.add("hidden");
+        document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.add("hidden");
         document.getElementById("setup-container").classList.remove("hidden");
+        renderTopics();
     }
 
-    // Veritabanını yükle
-    loadDatabase();
+    // Dil seçildiğinde stili ve altındaki konu butonlarını günceller
+    function setLangMode(mode) {
+        selectedLangMode = mode;
+        
+        // Aktif buton görsel stilini güncelle
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`btn-${mode}`).classList.add('active');
+        
+        // Konuları yeni dile göre yeniden listele
+        renderTopics();
+    }
+
+    // Konuları ekrana basan ana dinamik fonksiyon
+    function renderTopics() {
+        // JSON dosyasındaki tüm benzersiz konu (topic) isimlerini kümele
+        const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
+        const container = document.getElementById("topics-container");
+        container.innerHTML = ""; 
+
+        uniqueTopics.forEach(topicKey => {
+            let buttonText = topicKey;
+            
+            // Eğer sözlükte çevirisi varsa dile göre al, yoksa JSON'daki orijinal halini bas
+            if (topicTranslations[topicKey]) {
+                buttonText = topicTranslations[topicKey][selectedLangMode];
+            }
+
+            const button = document.createElement("button");
+            button.className = "topic-btn";
+            button.innerText = buttonText;
+            button.onclick = () => startTopic(topicKey);
+            
+            container.appendChild(button);
+        });
+    }
+
+    // Seçilen konuya göre testi başlatır
+    function startTopic(selectedTopic) {
+        currentTopicGlobal = selectedTopic;
+        currentQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
+        
+        if (currentQuestions.length === 0) {
+            alert("Bu konuya ait soru bulunamadı!");
+            return;
+        }
+
+        // Soruları karıştır
+        currentQuestions.sort(() => Math.random() - 0.5);
+        currentIndex = 0;
+        score = 0;
+
+        document.getElementById("setup-container").classList.add("hidden");
+        document.getElementById("quiz-container").classList.remove("hidden");
+        document.getElementById("feedback").innerText = "";
+        
+        // Enter tuşu ile kontrol etme özelliği
+        document.getElementById("answer-input").onkeypress = function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        };
+
+        showQuestion();
+    }
+
+    // Soruyu ekrana yazdırır
+    function showQuestion() {
+        if (currentIndex >= currentQuestions.length) {
+            finishQuiz();
+            return;
+        }
+
+        const q = currentQuestions[currentIndex];
+        const inputField = document.getElementById("answer-input");
+        const hintField = document.getElementById("hint");
+        
+        inputField.value = "";
+        inputField.focus();
+        document.getElementById("feedback").innerText = "";
+
+        // İlerleme çubuğunu güncelle
+        const progressPercent = (currentIndex / currentQuestions.length) * 100;
+        document.getElementById("progress").style.width = `${progressPercent}%`;
+
+        // İpucu (Hint) alanını dil seçimine göre ayarla
+        if (selectedLangMode === 'tr') {
+            hintField.innerText = `Anlamı: ${q.tr}`;
+        } else if (selectedLangMode === 'en') {
+            hintField.innerText = `Meaning: ${q.en}`;
+        } else {
+            hintField.innerText = `Meaning: ${q.en} (${q.tr})`;
+        }
+
+        // Soru tipine göre ekrana bas
+        if (q.type === 'word') {
+            document.getElementById("question").innerText = `Letonca karşılığı nedir?`;
+            inputField.placeholder = "Kelimeti yazın...";
+        } else if (q.type === 'sentence') {
+            document.getElementById("question").innerText = q.questionPattern;
+            inputField.placeholder = "Boşluğu doldurun...";
+        }
+    }
+
+    // Cevabı kontrol eder
+    function checkAnswer() {
+        const q = currentQuestions[currentIndex];
+        const userInput = document.getElementById("answer-input").value.trim().toLowerCase();
+        
+        // JSON yapısına göre doğru cevabın nerede olduğunu belirle
+        const correctAnswer = (q.type === 'word' ? q.lv : q.answer).trim().toLowerCase();
+        const feedbackField = document.getElementById("feedback");
+
+        if (userInput === correctAnswer) {
+            score++;
+            feedbackField.className = "feedback success";
+            feedbackField.innerText = "Pareizi! (Doğru) 🌟";
+        } else {
+            feedbackField.className = "feedback error";
+            feedbackField.innerText = `Nepareizi! Doğru cevap: ${correctAnswer}`;
+        }
+
+        currentIndex++;
+        // 1.5 saniye sonra sonraki soruya geç (kullanıcı doğruyu/yanlışı okuyabilsin diye)
+        setTimeout(showQuestion, 1500);
+    }
+
+    function finishQuiz() {
+        document.getElementById("quiz-container").classList.add("hidden");
+        document.getElementById("result-container").classList.remove("hidden");
+        document.getElementById("score-text").innerText = 
+            `${currentQuestions.length} soru içerisinden ${score} doğru cevap verdiniz!`;
+    }
+
+    function exitQuiz() {
+        if (confirm("Testten çıkmak istediğinize emin misiniz?")) {
+            showSetupScreen();
+        }
+    }
 </script>
 
 </body>
