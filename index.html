@@ -8,30 +8,36 @@
         :root {
             --primary: #00a2ff;
             --primary-dark: #0082cc;
-            --bg: #f5f7fb;
-            --card-bg: #ffffff;
-            --text: #333333;
-            --text-light: #666666;
-            --border: #e0e0e0;
+            --bg: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: rgba(0, 0, 0, 0.06);
             --success: #2ecc71;
             --error: #e74c3c;
             --warning: #f39c12;
-            --keyboard-bg: #f0f2f5;
+            --keyboard-bg: rgba(0, 0, 0, 0.03);
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            --blur: blur(10px);
+            --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+            --inner-glow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
         }
 
-        /* 🌙 Dark Mode Renk Değişkenleri */
+        /* 🌙 1. MADDE: Premium Dark Mode Tasarımı (Neon & Cam Efektli) */
         [data-theme="dark"] {
-            --bg: #121214;
-            --card-bg: #1a1a1e;
-            --text: #e1e1e6;
-            --text-light: #a4a4a8;
-            --border: #29292e;
-            --keyboard-bg: #202024;
+            --bg: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+            --card-bg: rgba(28, 30, 38, 0.85);
+            --text: #f5f6fa;
+            --text-light: #95a5a6;
+            --border: rgba(255, 255, 255, 0.08);
+            --keyboard-bg: rgba(255, 255, 255, 0.03);
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            --inner-glow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
+            background: var(--bg);
             color: var(--text);
             margin: 0;
             padding: 20px;
@@ -39,223 +45,274 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.5s ease, color 0.3s ease;
         }
 
+        /* 🏢 1. MADDE: Modern Glassmorphic Kart Yapısı */
         .container {
             background: var(--card-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
             max-width: 600px;
             width: 100%;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--card-shadow);
             text-align: center;
             position: relative;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.3s;
         }
 
-        /* Üst Kontrol Paneli */
         .top-bar {
             position: absolute;
-            top: 15px;
-            left: 20px;
-            right: 20px;
+            top: 20px;
+            left: 25px;
+            right: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .streak-badge {
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: rgba(255, 94, 87, 0.1);
+            color: #ff5e57;
+            padding: 6px 14px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            box-shadow: var(--inner-glow);
         }
 
         .right-controls {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .settings-btn {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            border-radius: 8px;
-            background: #eee;
-            border: none;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
             cursor: pointer;
-            font-weight: bold;
-            color: #333;
+            font-weight: 700;
+            color: var(--text);
+            transition: all 0.2s;
         }
         [data-theme="dark"] .settings-btn {
-            background: #29292e;
-            color: #e1e1e6;
+            background: rgba(255,255,255,0.05);
         }
 
         .settings-btn.active {
             background: var(--primary);
             color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 162, 255, 0.3);
         }
 
         h1, h2 {
-            margin-top: 20px;
-            color: var(--text);
+            margin-top: 25px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
             color: var(--text-light);
-            margin-bottom: 20px;
-            margin-top: 20px;
+            margin-bottom: 25px;
+            margin-top: 25px;
         }
 
         .hidden { display: none !important; }
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
+        /* 🖱️ 2. MADDE: Mikro Etkileşimli Premium Butonlar */
         button {
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-size: 1rem;
-            font-weight: 600;
-            border: 2px solid var(--border);
-            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            border-radius: 16px;
             background: var(--card-bg);
             color: var(--text);
+            box-shadow: var(--btn-shadow), var(--inner-glow);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         button:hover {
+            transform: translateY(-2px);
             border-color: var(--primary);
-            background: rgba(0, 162, 255, 0.05);
+            box-shadow: 0 6px 15px rgba(0, 162, 255, 0.15);
+        }
+
+        button:active {
+            transform: translateY(1px); /* Tıklama çökme efekti */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .lang-btn.active {
-            background-color: var(--primary);
-            border-color: var(--primary);
+            background: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 162, 255, 0.3);
+            border-color: var(--primary);
         }
 
         .topic-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
+            gap: 14px;
+            margin-top: 20px;
         }
 
+        /* Giriş ekranındaki ünite butonlarının pürüzsüzce süzülmesi */
         .topic-btn {
             width: 100%;
             text-align: left;
-            padding: 16px 20px;
-            background: var(--card-bg);
+            padding: 18px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: slideIn 0.4s ease backwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .error-pool-btn {
-            border-color: var(--error);
-            background: rgba(231, 76, 60, 0.05);
-            font-weight: bold;
+            border-color: rgba(231, 76, 60, 0.4);
+            background: rgba(231, 76, 60, 0.06);
+            color: var(--error);
         }
         .error-pool-btn:hover {
             background: var(--error);
             color: white;
+            border-color: var(--error);
         }
 
         .topic-score {
             font-size: 0.85rem;
-            background: rgba(0,0,0,0.05);
-            padding: 4px 8px;
-            border-radius: 6px;
+            background: rgba(0,0,0,0.04);
+            padding: 6px 12px;
+            border-radius: 10px;
             color: var(--text-light);
-            font-weight: bold;
         }
-        [data-theme="dark"] .topic-score {
-            background: rgba(255,255,255,0.05);
-        }
+        [data-theme="dark"] .topic-score { background: rgba(255,255,255,0.04); }
 
+        /* 📈 3. MADDE: Duolingo Tarzı 3D ve Parlayan İlerleme Çubuğu */
         .progress-bar {
-            height: 8px;
+            height: 14px;
             width: 100%;
-            background: #eee;
-            border-radius: 4px;
+            background: rgba(0,0,0,0.04);
+            border-radius: 50px;
             overflow: hidden;
-            margin-bottom: 25px;
-            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-top: 25px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
         }
-        [data-theme="dark"] .progress-bar { background: #29292e; }
+        [data-theme="dark"] .progress-bar { background: rgba(255,255,255,0.05); }
 
         .progress {
             height: 100%;
-            background: var(--primary);
+            background: linear-gradient(90deg, #56ccf2, #2f80ed);
             width: 0%;
-            transition: width 0.3s ease;
+            border-radius: 50px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 0 10px rgba(86, 204, 242, 0.5);
+        }
+        /* İlerleme barı parıltı ucu */
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            animation: progressShine 2s infinite;
+        }
+        @keyframes progressShine {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
         }
 
         .question-box {
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 15px;
-            color: var(--text);
+            color: var(--text-light);
         }
 
-       .hint-box {
-            font-size: 1.4rem; /* Boyutu soru fontu seviyesine çıkardık */
-            font-weight: 700;  /* Tamamen kalın (bold) yaptık */
-            margin-bottom: 25px;
-            color: var(--text); /* Rengini ana metin rengine eşitledik */
+        /* İstek üzerine büyütülen ve kalınlaştırılan Meaning Box */
+        .hint-box {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: var(--text);
+            letter-spacing: -0.3px;
         }
 
         .input-container {
             display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         input[type="text"] {
             flex: 1;
-            padding: 14px;
-            font-size: 1.1rem;
+            padding: 16px;
+            font-size: 1.15rem;
+            font-weight: 600;
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             background: var(--card-bg);
             color: var(--text);
             box-sizing: border-box;
             text-align: center;
+            box-shadow: var(--inner-glow);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         input[type="text"]:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 162, 255, 0.15);
         }
 
         .hint-action-btn {
-            padding: 0 15px;
-            font-size: 1.2rem;
+            padding: 0 18px;
+            font-size: 1.3rem;
+            border-radius: 16px;
         }
 
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 25px;
         }
 
         .option-btn {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             text-align: center;
+        }
+        .option-btn:hover {
+            background: rgba(0, 162, 255, 0.08);
         }
 
         .lv-keyboard {
@@ -263,44 +320,81 @@
             justify-content: center;
             gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             background: var(--keyboard-bg);
-            padding: 10px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
         }
 
         .kb-btn {
-            padding: 8px 12px;
+            padding: 10px 14px;
             font-size: 1.1rem;
-            min-width: 35px;
-            border-radius: 6px;
+            font-weight: 700;
+            min-width: 40px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             background: var(--card-bg);
             color: var(--text);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .feedback {
-            margin-top: 15px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            min-height: 24px;
+            margin-top: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            min-height: 28px;
         }
         .feedback.success { color: var(--success); }
         .feedback.error { color: var(--error); }
         .feedback.warning { color: var(--warning); }
 
-        .shake { animation: shake 0.4s ease-in-out; }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* 🏆 4. MADDE: Sonuç Ekranı Yuvarlak Başarı Halkası Stili */
+        .result-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(0, 162, 255, 0.1);
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            box-shadow: var(--inner-glow);
+            border: 3px solid var(--primary);
+        }
+
+        /* 🎉 4. MADDE: CSS Konfeti Parçacıkları */
+        .confetti {
+            position: absolute;
+            width: 8px; height: 8px;
+            background-color: #f2d74e;
+            position: absolute;
+            top: -10px;
+            border-radius: 50%;
+            animation: confettiDrop 2.5s ease-out infinite;
+            z-index: 10;
+        }
+        @keyframes confettiDrop {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
 <div class="container" id="main-card">
-    <!-- Üst Kontrol ve Bilgi Çubuğu -->
+    <!-- Üst Kontrol Çubuğu -->
     <div class="top-bar">
         <div id="streak-display" class="streak-badge" title="Günlük Çalışma Serisi">🔥 0 Gün</div>
         <div class="right-controls">
@@ -317,7 +411,7 @@
 
     <!-- 2. KURULUM / SEÇİM EKRANI -->
     <div id="setup-container" class="hidden">
-        <h1>Mani Lingo Setup</h1>
+        <h1>Mani Lingo</h1>
         
         <div class="subtitle">1. Öğrenme Dili Seçimi</div>
         <div class="btn-group">
@@ -336,29 +430,27 @@
         <div id="question" class="question-box"></div>
         <div id="hint" class="hint-box"></div>
         
-        <!-- Çoktan Seçmeli Alanı -->
         <div id="options-container" class="options-grid hidden"></div>
 
-        <!-- Metin Giriş Alanı + İpucu Butonu -->
         <div id="input-area" class="input-container hidden">
             <input type="text" id="answer-input" placeholder="Cevabınızı yazın..." autocomplete="off">
-            <button id="hint-btn" class="hint-action-btn" onclick="revealLetterHint()" title="Harf İpucu Al">💡</button>
+            <button id="hint-btn" class="hint-action-btn" onclick="revealLetterHint()">💡</button>
         </div>
         
-        <!-- Letonca Klavye Alanı -->
-        <div id="keyboard-container" class="lv-keyboard hidden"></div>
+        <div id="keyboard-container" class="keyboard-container hidden"></div>
         
-        <div class="btn-group">
+        <div class="btn-group" style="margin-top: 20px;">
             <button id="submit-btn" onclick="checkTextAnswer()" style="background: var(--primary); color: white; border: none;" class="hidden">Kontrol Et</button>
-            <button onclick="exitQuiz()" style="background: #eee; border: none;">Çıkış</button>
+            <button onclick="exitQuiz()" style="background: rgba(0,0,0,0.04); border: none;">Çıkış</button>
         </div>
         <div id="feedback" class="feedback"></div>
     </div>
 
     <!-- 4. SONUÇ EKRANI -->
     <div id="result-container" class="hidden">
-        <h2>Tebrikler! 🎉</h2>
-        <p id="score-text"></p>
+        <h2>Muhteşem Başarı! 🎉</h2>
+        <div class="result-circle" id="result-circle-box">0%</div>
+        <p id="score-text" style="font-size: 1.1rem; font-weight: 600; margin-bottom: 25px;"></p>
         <button onclick="showSetupScreen()" style="background: var(--primary); color: white; border: none;">Ana Menüye Dön</button>
     </div>
 </div>
@@ -378,33 +470,30 @@
     let score = 0;
     let selectedLangMode = 'tr';
     let currentTopicKey = '';
-    let hintCount = 0; // Harf ipucu sayacı
-    let isErrorMode = false; // Hata havuzu aktif mi?
+    let hintCount = 0;
+    let isErrorMode = false;
 
     let settings = { sfx: localStorage.getItem('ml_sfx') !== 'false' };
 
-    // 🎵 Ses Efektleri (Bip sesleri)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
         if (!settings.sfx) return;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        osc.connect(gain); gain.connect(audioCtx.destination);
         if (type === 'success') {
             osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
         } else if (type === 'error') {
             osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(165, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            osc.frequency.setValueAtTime(147, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.25);
         }
     }
 
-    // 🌙 Tema Değiştirme (Dark Mode)
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -413,15 +502,12 @@
         document.getElementById('toggle-theme').innerText = newTheme === 'dark' ? "☀️ Mod" : "🌙 Mod";
     }
 
-    // Ses ayarı açma/kapama
     function toggleSetting(key) {
         settings[key] = !settings[key];
         localStorage.setItem(`ml_${key}`, settings[key]);
-        const btn = document.getElementById(`toggle-${key}`);
-        btn.classList.toggle('active', settings[key]);
+        document.getElementById(`toggle-${key}`).classList.toggle('active', settings[key]);
     }
 
-    // 🔥 Streak (Günlük Seri) Algoritması
     function updateStreak(isQuizFinished = false) {
         const today = new Date().toDateString();
         const lastVisit = localStorage.getItem('ml_last_visit');
@@ -432,11 +518,10 @@
         } else {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-            
             if (lastVisit === yesterday.toDateString()) {
                 if (isQuizFinished) streak += 1;
             } else if (lastVisit !== today) {
-                if (isQuizFinished) streak = 1; else streak = 0; // Gün atlandıysa sıfırla
+                if (isQuizFinished) streak = isQuizFinished ? 1 : 0;
             }
         }
 
@@ -447,22 +532,37 @@
         document.getElementById('streak-display').innerText = `🔥 ${streak} Gün`;
     }
 
+    // 🎉 4. MADDE: Dinamik Konfeti Tetikleyici
+    function triggerConfetti() {
+        const card = document.getElementById("main-card");
+        const colors = ['#f2d74e', '#95c3de', '#e94a3f', '#3fe979', '#a93fe9'];
+        for (let i = 0; i < 40; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * card.offsetWidth + 'px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confetti.style.width = Math.random() * 6 + 6 + 'px';
+            confetti.style.height = confetti.style.width;
+            card.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 2500);
+        }
+    }
+
     async function loadDatabase() {
         try {
             const response = await fetch('./questions.json');
             if (!response.ok) throw new Error("Veri dosyası bulunamadı");
             vocabularyDatabase = await response.json();
             
-            // Ayarları yükle
             if (localStorage.getItem('ml_theme') === 'dark') toggleTheme();
             if (localStorage.getItem('mani_lingo_lang')) selectedLangMode = localStorage.getItem('mani_lingo_lang');
             document.getElementById('toggle-sfx').classList.toggle('active', settings.sfx);
             
-            updateStreak(); // Girişte seriyi kontrol et
+            updateStreak();
             showSetupScreen();
         } catch (error) {
             document.getElementById("loading-container").innerText = "Hata: Veri yüklenemedi!";
-            console.error(error);
         }
     }
 
@@ -493,23 +593,24 @@
         if (!container) return;
         container.innerHTML = ""; 
 
-        // 🟥 1. MADDE: Yanlış yapılan sorular sepeti butonu
         const errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
         if (errorPool.length > 0) {
             const errBtn = document.createElement("button");
             errBtn.className = "topic-btn error-pool-btn";
-            errBtn.innerHTML = `<span>🚨 Yanlış Yaptığım Sorularla Pratik Yap</span> <span class="topic-score">${errorPool.length} Soru</span>`;
+            errBtn.style.animationDelay = "0.05s";
+            errBtn.innerHTML = `<span>🚨 Yanlış Yaptığım Sorular</span> <span class="topic-score">${errorPool.length} Soru</span>`;
             errBtn.onclick = () => startTopic('__errors__');
             container.appendChild(errBtn);
         }
 
         const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
-        uniqueTopics.forEach(topicKey => {
+        uniqueTopics.forEach((topicKey, index) => {
             let buttonText = topicKey;
             if (topicTranslations[topicKey]) buttonText = topicTranslations[topicKey][selectedLangMode];
 
             const button = document.createElement("button");
             button.className = "topic-btn";
+            button.style.animationDelay = `${(index + 1) * 0.08}s`;
             button.innerHTML = `<span>${buttonText}</span>`;
 
             const savedScoreData = localStorage.getItem(`mani_score_${topicKey}`);
@@ -552,6 +653,7 @@
     function buildKeyboard() {
         const kbContainer = document.getElementById("keyboard-container");
         kbContainer.innerHTML = "";
+        kbContainer.className = "lv-keyboard hidden"; 
         lvLetters.forEach(letter => {
             const btn = document.createElement("button");
             btn.className = "kb-btn";
@@ -584,7 +686,6 @@
         const progressPercent = (currentIndex / currentQuestions.length) * 100;
         document.getElementById("progress").style.width = `${progressPercent}%`;
 
-        // İpucu Dili Metni Oluşturma
         let meaningText = "";
         if (selectedLangMode === 'tr') meaningText = `Meaning: ${q.tr}`;
         else if (selectedLangMode === 'en') meaningText = `Meaning: ${q.en}`;
@@ -593,9 +694,7 @@
         hintField.innerText = meaningText;
 
         if (q.type === 'word') {
-            // 🎯 Çoktan Seçmeli Test Modu
             document.getElementById("question").innerText = `Doğru Letonca kelimeyi seçin:`;
-            // Soru başlığını biraz küçültüp anlam alanını ön plana çıkarıyoruz
             document.getElementById("question").style.fontSize = "1.1rem";
             document.getElementById("question").style.color = "var(--text-light)";
             
@@ -605,8 +704,7 @@
             optionsContainer.classList.remove("hidden");
             generateOptions(q);
         } else {
-            // 🎯 Yazma Modları (Sentence / Translate)
-            document.getElementById("question").style.fontSize = "1.4rem";
+            document.getElementById("question").style.fontSize = "1.5rem";
             document.getElementById("question").style.color = "var(--text)";
             
             optionsContainer.classList.add("hidden");
@@ -628,7 +726,7 @@
             inputField.onkeypress = function(e) { if (e.key === 'Enter') checkTextAnswer(); };
         }
     }
-    // 💡 2. MADDE: Akıllı Harf İpucu Sistemi
+
     function revealLetterHint() {
         const q = currentQuestions[currentIndex];
         const correctAnswer = (q.type === 'sentence' ? q.answer : q.lv);
@@ -666,14 +764,12 @@
                   .replace(/ū/g, 'u').replace(/ž/g, 'z');
     }
 
-    // Sepete Yanlış Soru Ekleme/Çıkarma Yardımcısı
+    // Sepet Güncelleyici
     function handleErrorsPool(question, isCorrect) {
         let errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
         if (isCorrect) {
-            // Eğer doğru bildiyse ve hata havuzundaysa sil
             errorPool = errorPool.filter(item => !(item.lv === question.lv && item.topic === question.topic));
         } else {
-            // Yanlış bildiyse ve havuzda yoksa ekle
             const exist = errorPool.some(item => item.lv === question.lv && item.topic === question.topic);
             if (!exist) errorPool.push(question);
         }
@@ -707,14 +803,12 @@
         const card = document.getElementById("main-card");
 
         if (userInput === correctAnswer) {
-            // Harf ipucu kullandıysa yarım puan, kullanmadıysa tam puan
             score += (hintCount > 0) ? 0.5 : 1;
             playSound('success');
             feedbackField.className = "feedback success";
-            feedbackField.innerText = (hintCount > 0) ? "Doğru (İpucu kullandınız 💡)" : "Pareizi! (Doğru) 🌟";
+            feedbackField.innerText = (hintCount > 0) ? "Doğru (İpucu kullanıldı 💡)" : "Pareizi! (Doğru) 🌟";
             handleErrorsPool(q, true);
         } else if (cleanAksan(userInput) === cleanAksan(correctAnswer)) {
-            // 2. MADDE: Tolerans Kontrolü
             score += (hintCount > 0) ? 0.5 : 1;
             playSound('success');
             feedbackField.className = "feedback warning";
@@ -734,8 +828,13 @@
     function finishQuiz() {
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.remove("hidden");
+        
+        // 🏆 4. MADDE: Başarı Halkası Yüzdesi Hesaplama
+        const successPercentage = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById("result-circle-box").innerText = `${successPercentage}%`;
+        
         document.getElementById("score-text").innerText = 
-            `${currentQuestions.length} soru içerisinden ${score} puan topladınız!`;
+            `25 soru içerisinden ${score} puan topladınız!`;
 
         if (!isErrorMode) {
             const currentScoreString = `${score}/${currentQuestions.length}`;
@@ -748,7 +847,12 @@
             }
         }
         
-        updateStreak(true); // Test başarıyla bittiğinde seriyi artır
+        // 🎯 4. MADDE: Tam puan (25/25) alındığında konfeti patlat
+        if (successPercentage === 100) {
+            triggerConfetti();
+        }
+        
+        updateStreak(true);
     }
 
     function exitQuiz() {
