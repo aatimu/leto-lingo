@@ -210,11 +210,11 @@
             color: var(--text);
         }
 
-        .hint-box {
-            font-size: 1rem;
-            color: var(--text-light);
+       .hint-box {
+            font-size: 1.4rem; /* Boyutu soru fontu seviyesine çıkardık */
+            font-weight: 700;  /* Tamamen kalın (bold) yaptık */
             margin-bottom: 25px;
-            font-style: italic;
+            color: var(--text); /* Rengini ana metin rengine eşitledik */
         }
 
         .input-container {
@@ -579,23 +579,36 @@
         const hintField = document.getElementById("hint");
         
         document.getElementById("feedback").innerText = "";
-        hintCount = 0; // İpucunu sıfırla
+        hintCount = 0;
 
         const progressPercent = (currentIndex / currentQuestions.length) * 100;
         document.getElementById("progress").style.width = `${progressPercent}%`;
 
-        if (selectedLangMode === 'tr') hintField.innerText = `Anlamı: ${q.tr}`;
-        else if (selectedLangMode === 'en') hintField.innerText = `Meaning: ${q.en}`;
-        else hintField.innerText = `Meaning: ${q.en} (${q.tr})`;
+        // İpucu Dili Metni Oluşturma
+        let meaningText = "";
+        if (selectedLangMode === 'tr') meaningText = `Meaning: ${q.tr}`;
+        else if (selectedLangMode === 'en') meaningText = `Meaning: ${q.en}`;
+        else meaningText = `Meaning: ${q.en} (${q.tr})`;
+
+        hintField.innerText = meaningText;
 
         if (q.type === 'word') {
+            // 🎯 Çoktan Seçmeli Test Modu
             document.getElementById("question").innerText = `Doğru Letonca kelimeyi seçin:`;
+            // Soru başlığını biraz küçültüp anlam alanını ön plana çıkarıyoruz
+            document.getElementById("question").style.fontSize = "1.1rem";
+            document.getElementById("question").style.color = "var(--text-light)";
+            
             inputArea.classList.add("hidden");
             submitBtn.classList.add("hidden");
             kbContainer.classList.add("hidden");
             optionsContainer.classList.remove("hidden");
             generateOptions(q);
         } else {
+            // 🎯 Yazma Modları (Sentence / Translate)
+            document.getElementById("question").style.fontSize = "1.4rem";
+            document.getElementById("question").style.color = "var(--text)";
+            
             optionsContainer.classList.add("hidden");
             inputArea.classList.remove("hidden");
             submitBtn.classList.remove("hidden");
@@ -615,7 +628,6 @@
             inputField.onkeypress = function(e) { if (e.key === 'Enter') checkTextAnswer(); };
         }
     }
-
     // 💡 2. MADDE: Akıllı Harf İpucu Sistemi
     function revealLetterHint() {
         const q = currentQuestions[currentIndex];
