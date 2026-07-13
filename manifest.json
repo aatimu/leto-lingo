@@ -1,0 +1,22 @@
+{
+  "name": "Mani Lingo Letonca",
+  "short_name": "ManiLingo",
+  "description": "Konu bazlı dinamik Letonca öğrenme platformu.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#141e30",
+  "theme-color": "#00a2ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
