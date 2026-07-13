@@ -214,9 +214,8 @@
         <button onclick="showSetupScreen()" style="background: var(--primary); color: white; border: none;">Ana Menüye Dön</button>
     </div>
 </div>
-
 <script>
-    // Konu Başlıkları Sözlüğü (Dil seçimine göre buton isimlerini değiştirir)
+    // Konu Başlıkları Sözlüğü
     const topicTranslations = {
         'Selamlaşma ve Tanışma': {
             tr: 'Selamlaşma ve Tanışma',
@@ -240,54 +239,69 @@
     let currentIndex = 0;
     let score = 0;
     let selectedLangMode = 'tr';
-    let currentTopicGlobal = '';
 
-    // Sayfa açıldığında JSON dosyasını çek
-    window.onload = async function loadDatabase() {
+    // Veri dosyasını çekip her şeyin sırayla çalışmasını garanti eden fonksiyon
+    async function loadDatabase() {
         try {
-            // Canlıda Vercel üzerindeki questions.json'ı okur
             const response = await fetch('./questions.json');
             if (!response.ok) throw new Error("Veri dosyası bulunamadı");
-            vocabularyDatabase = await response.json();
             
-            showSetupScreen();
+            vocabularyDatabase = await response.json();
+            console.log("JSON Başarıyla Yüklendi:", vocabularyDatabase); // Kontrol için
+            
+            // Veri yüklendikten sonra arayüzü göster
+            document.getElementById("loading-container").classList.add("hidden");
+            document.getElementById("setup-container").classList.remove("hidden");
+            
+            // Konuları ilk kez ekrana bas
+            renderTopics();
         } catch (error) {
             document.getElementById("loading-container").innerText = "Hata: Canlı veri havuzu yüklenemedi!";
             console.error(error);
         }
-    };
+    }
+
+    // Sayfa DOM elementleri hazır olduğunda veri yüklemesini başlat
+    document.addEventListener("DOMContentLoaded", loadDatabase);
 
     function showSetupScreen() {
-        document.getElementById("loading-container").classList.add("hidden");
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.add("hidden");
         document.getElementById("setup-container").classList.remove("hidden");
         renderTopics();
     }
 
-    // Dil seçildiğinde stili ve altındaki konu butonlarını günceller
+    // Dil butonuna tıklandığında tetiklenen fonksiyon
     function setLangMode(mode) {
         selectedLangMode = mode;
         
-        // Aktif buton görsel stilini güncelle
+        // Butonların görsel aktifliğini güncelle
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`btn-${mode}`).classList.add('active');
+        const activeBtn = document.getElementById(`btn-${mode}`);
+        if(activeBtn) activeBtn.classList.add('active');
         
-        // Konuları yeni dile göre yeniden listele
+        // Konuları yeni seçilen dile göre baştan oluştur
         renderTopics();
     }
 
-    // Konuları ekrana basan ana dinamik fonksiyon
+    // Konuları ekrana dinamik olarak basan fonksiyon
     function renderTopics() {
-        // JSON dosyasındaki tüm benzersiz konu (topic) isimlerini kümele
-        const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
         const container = document.getElementById("topics-container");
+        if (!container) return;
+        
         container.innerHTML = ""; 
+
+        if (vocabularyDatabase.length === 0) {
+            container.innerHTML = "<p style='color:red;'>Havuzda henüz konu bulunamadı. JSON yüklenememiş olabilir.</p>";
+            return;
+        }
+
+        // Benzersiz konuları topla
+        const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
 
         uniqueTopics.forEach(topicKey => {
             let buttonText = topicKey;
             
-            // Eğer sözlükte çevirisi varsa dile göre al, yoksa JSON'daki orijinal halini bas
             if (topicTranslations[topicKey]) {
                 buttonText = topicTranslations[topicKey][selectedLangMode];
             }
@@ -301,9 +315,7 @@
         });
     }
 
-    // Seçilen konuya göre testi başlatır
     function startTopic(selectedTopic) {
-        currentTopicGlobal = selectedTopic;
         currentQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
         
         if (currentQuestions.length === 0) {
@@ -311,7 +323,6 @@
             return;
         }
 
-        // Soruları karıştır
         currentQuestions.sort(() => Math.random() - 0.5);
         currentIndex = 0;
         score = 0;
@@ -320,7 +331,6 @@
         document.getElementById("quiz-container").classList.remove("hidden");
         document.getElementById("feedback").innerText = "";
         
-        // Enter tuşu ile kontrol etme özelliği
         document.getElementById("answer-input").onkeypress = function(e) {
             if (e.key === 'Enter') checkAnswer();
         };
@@ -328,7 +338,6 @@
         showQuestion();
     }
 
-    // Soruyu ekrana yazdırır
     function showQuestion() {
         if (currentIndex >= currentQuestions.length) {
             finishQuiz();
@@ -343,11 +352,9 @@
         inputField.focus();
         document.getElementById("feedback").innerText = "";
 
-        // İlerleme çubuğunu güncelle
         const progressPercent = (currentIndex / currentQuestions.length) * 100;
         document.getElementById("progress").style.width = `${progressPercent}%`;
 
-        // İpucu (Hint) alanını dil seçimine göre ayarla
         if (selectedLangMode === 'tr') {
             hintField.innerText = `Anlamı: ${q.tr}`;
         } else if (selectedLangMode === 'en') {
@@ -356,22 +363,18 @@
             hintField.innerText = `Meaning: ${q.en} (${q.tr})`;
         }
 
-        // Soru tipine göre ekrana bas
         if (q.type === 'word') {
             document.getElementById("question").innerText = `Letonca karşılığı nedir?`;
-            inputField.placeholder = "Kelimeti yazın...";
+            inputField.placeholder = "Kelimeyi yazın...";
         } else if (q.type === 'sentence') {
             document.getElementById("question").innerText = q.questionPattern;
             inputField.placeholder = "Boşluğu doldurun...";
         }
     }
 
-    // Cevabı kontrol eder
     function checkAnswer() {
         const q = currentQuestions[currentIndex];
         const userInput = document.getElementById("answer-input").value.trim().toLowerCase();
-        
-        // JSON yapısına göre doğru cevabın nerede olduğunu belirle
         const correctAnswer = (q.type === 'word' ? q.lv : q.answer).trim().toLowerCase();
         const feedbackField = document.getElementById("feedback");
 
@@ -385,7 +388,6 @@
         }
 
         currentIndex++;
-        // 1.5 saniye sonra sonraki soruya geç (kullanıcı doğruyu/yanlışı okuyabilsin diye)
         setTimeout(showQuestion, 1500);
     }
 
@@ -402,6 +404,5 @@
         }
     }
 </script>
-
 </body>
 </html>
