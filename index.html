@@ -116,13 +116,14 @@
             <button class="btn" id="lang-both" onclick="setLangMode('both')">English (Türkçe)</button>
         </div>
 
-        <div class="section-title" style="margin-top: 25px;">2. Seviye Seçimi</div>
-        <div class="options-container">
-            <button class="btn" onclick="startApp('A1')">A1 (Başlangıç)</button>
-            <button class="btn" onclick="startApp('A2')">A2 (Temel)</button>
-            <button class="btn" onclick="startApp('B1')">B1 (Orta)</button>
-        </div>
+        <div id="setup-container" class="hidden">
+    <h2>Lūdzu, izvēlieties tēmu / Lütfen bir konu seçin:</h2>
+    <div class="button-grid">
+        <button onclick="startTopic('Selamlaşma ve Tanışma')">Selamlaşma ve Tanışma</button>
+        <button onclick="startTopic('Meslekler ve Günlük Hayat')">Meslekler ve Günlük Hayat</button>
+        <button onclick="startTopic('Sayılar ve İletişim')">Sayılar ve İletişim</button>
     </div>
+</div>
 
     <!-- Oyun Ekranı -->
     <div id="game-container" class="hidden">
