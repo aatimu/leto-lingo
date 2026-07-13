@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mani Lingo - Letonca Öğren</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#00a2ff">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <style>
         :root {
             --primary: #00a2ff;
@@ -23,7 +26,6 @@
             --inner-glow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
         }
 
-        /* 🌙 1. MADDE: Premium Dark Mode Tasarımı (Neon & Cam Efektli) */
         [data-theme="dark"] {
             --bg: linear-gradient(135deg, #141e30 0%, #243b55 100%);
             --card-bg: rgba(28, 30, 38, 0.85);
@@ -48,7 +50,6 @@
             transition: background 0.5s ease, color 0.3s ease;
         }
 
-        /* 🏢 1. MADDE: Modern Glassmorphic Kart Yapısı */
         .container {
             background: var(--card-bg);
             backdrop-filter: var(--blur);
@@ -61,7 +62,6 @@
             box-shadow: var(--card-shadow);
             text-align: center;
             position: relative;
-            transition: background 0.3s, transform 0.3s;
         }
 
         .top-bar {
@@ -84,17 +84,16 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: var(--inner-glow);
         }
 
         .right-controls {
             display: flex;
-            gap: 10px;
+            gap: 6px;
         }
 
         .settings-btn {
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             border-radius: 12px;
             background: rgba(0,0,0,0.05);
             border: 1px solid var(--border);
@@ -103,23 +102,21 @@
             color: var(--text);
             transition: all 0.2s;
         }
-        [data-theme="dark"] .settings-btn {
-            background: rgba(255,255,255,0.05);
-        }
+        [data-theme="dark"] .settings-btn { background: rgba(255,255,255,0.05); }
 
         .settings-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 162, 255, 0.3);
         }
 
-        h1, h2 {
-            margin-top: 25px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+        .backup-btn {
+            background: #2ecc71 !important;
+            color: white !important;
+            border-color: #2ecc71 !important;
         }
 
+        h1, h2 { margin-top: 35px; font-weight: 800; }
         .subtitle {
             text-transform: uppercase;
             font-size: 0.8rem;
@@ -131,18 +128,10 @@
         }
 
         .hidden { display: none !important; }
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
 
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        /* 🖱️ 2. MADDE: Mikro Etkileşimli Premium Butonlar */
         button {
-            padding: 14px 28px;
+            padding: 14px 24px;
             font-size: 1rem;
             font-weight: 700;
             border: 1px solid var(--border);
@@ -151,34 +140,18 @@
             color: var(--text);
             box-shadow: var(--btn-shadow), var(--inner-glow);
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.2s ease;
         }
 
         button:hover {
             transform: translateY(-2px);
             border-color: var(--primary);
-            box-shadow: 0 6px 15px rgba(0, 162, 255, 0.15);
         }
 
-        button:active {
-            transform: translateY(1px); /* Tıklama çökme efekti */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+        button:active { transform: translateY(1px); }
+        .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .lang-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .topic-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 20px;
-        }
-
-        /* Giriş ekranındaki ünite butonlarının pürüzsüzce süzülmesi */
+        .topic-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .topic-btn {
             width: 100%;
             text-align: left;
@@ -186,7 +159,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideIn 0.4s ease backwards;
+            animation: slideIn 0.3s ease backwards;
         }
 
         @keyframes slideIn {
@@ -194,38 +167,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .error-pool-btn {
-            border-color: rgba(231, 76, 60, 0.4);
-            background: rgba(231, 76, 60, 0.06);
-            color: var(--error);
-        }
-        .error-pool-btn:hover {
-            background: var(--error);
-            color: white;
-            border-color: var(--error);
-        }
+        .error-pool-btn { border-color: rgba(231, 76, 60, 0.4); background: rgba(231, 76, 60, 0.06); color: var(--error); }
+        .error-pool-btn:hover { background: var(--error); color: white; }
+        
+        /* Karışık Yükle Özel Buton Stili */
+        .mix-pool-btn { border-color: rgba(155, 89, 182, 0.4); background: rgba(155, 89, 182, 0.06); color: #9b59b6; }
+        .mix-pool-btn:hover { background: #9b59b6; color: white; border-color: #9b59b6; }
 
-        .topic-score {
-            font-size: 0.85rem;
-            background: rgba(0,0,0,0.04);
-            padding: 6px 12px;
-            border-radius: 10px;
-            color: var(--text-light);
-        }
+        .topic-score { font-size: 0.85rem; background: rgba(0,0,0,0.04); padding: 6px 12px; border-radius: 10px; color: var(--text-light); }
         [data-theme="dark"] .topic-score { background: rgba(255,255,255,0.04); }
 
-        /* 📈 3. MADDE: Duolingo Tarzı 3D ve Parlayan İlerleme Çubuğu */
-        .progress-bar {
-            height: 14px;
-            width: 100%;
-            background: rgba(0,0,0,0.04);
-            border-radius: 50px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            margin-top: 25px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-            position: relative;
-        }
+        .progress-bar { height: 14px; width: 100%; background: rgba(0,0,0,0.04); border-radius: 50px; overflow: hidden; margin-bottom: 30px; margin-top: 25px; }
         [data-theme="dark"] .progress-bar { background: rgba(255,255,255,0.05); }
 
         .progress {
@@ -233,123 +185,34 @@
             background: linear-gradient(90deg, #56ccf2, #2f80ed);
             width: 0%;
             border-radius: 50px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: 0 0 10px rgba(86, 204, 242, 0.5);
-        }
-        /* İlerleme barı parıltı ucu */
-        .progress::after {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-            animation: progressShine 2s infinite;
-        }
-        @keyframes progressShine {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(100%); }
+            transition: width 0.4s ease;
         }
 
-        .question-box {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--text-light);
-        }
+        .question-box { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; color: var(--text-light); }
+        .hint-box { font-size: 1.6rem; font-weight: 800; margin-bottom: 30px; color: var(--text); }
 
-        /* İstek üzerine büyütülen ve kalınlaştırılan Meaning Box */
-        .hint-box {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            color: var(--text);
-            letter-spacing: -0.3px;
-        }
-
-        .input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        .input-container { display: flex; gap: 10px; margin-bottom: 20px; }
         input[type="text"] {
-            flex: 1;
-            padding: 16px;
-            font-size: 1.15rem;
-            font-weight: 600;
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            background: var(--card-bg);
-            color: var(--text);
-            box-sizing: border-box;
-            text-align: center;
-            box-shadow: var(--inner-glow);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            flex: 1; padding: 16px; font-size: 1.15rem; font-weight: 600;
+            border: 2px solid var(--border); border-radius: 16px;
+            background: var(--card-bg); color: var(--text); text-align: center;
         }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .hint-action-btn { padding: 0 18px; font-size: 1.3rem; border-radius: 16px; }
 
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 162, 255, 0.15);
-        }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 25px; }
+        .option-btn { width: 100%; padding: 18px; text-align: center; }
+        .option-btn:hover { background: rgba(0, 162, 255, 0.08); }
 
-        .hint-action-btn {
-            padding: 0 18px;
-            font-size: 1.3rem;
-            border-radius: 16px;
-        }
+        .lv-keyboard { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 25px; background: var(--keyboard-bg); padding: 12px; border-radius: 16px; border: 1px solid var(--border); }
+        .kb-btn { padding: 10px 14px; font-size: 1.1rem; font-weight: 700; min-width: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); }
 
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 25px;
-        }
-
-        .option-btn {
-            width: 100%;
-            padding: 18px;
-            text-align: center;
-        }
-        .option-btn:hover {
-            background: rgba(0, 162, 255, 0.08);
-        }
-
-        .lv-keyboard {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-            background: var(--keyboard-bg);
-            padding: 12px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .kb-btn {
-            padding: 10px 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            min-width: 40px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .feedback {
-            margin-top: 20px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            min-height: 28px;
-        }
+        .feedback { margin-top: 20px; font-weight: 700; font-size: 1.2rem; min-height: 28px; }
         .feedback.success { color: var(--success); }
         .feedback.error { color: var(--error); }
         .feedback.warning { color: var(--warning); }
 
-        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        .shake { animation: shake 0.4s both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -357,34 +220,8 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* 🏆 4. MADDE: Sonuç Ekranı Yuvarlak Başarı Halkası Stili */
-        .result-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: rgba(0, 162, 255, 0.1);
-            color: var(--primary);
-            font-size: 2rem;
-            font-weight: 800;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-            box-shadow: var(--inner-glow);
-            border: 3px solid var(--primary);
-        }
-
-        /* 🎉 4. MADDE: CSS Konfeti Parçacıkları */
-        .confetti {
-            position: absolute;
-            width: 8px; height: 8px;
-            background-color: #f2d74e;
-            position: absolute;
-            top: -10px;
-            border-radius: 50%;
-            animation: confettiDrop 2.5s ease-out infinite;
-            z-index: 10;
-        }
+        .result-circle { width: 120px; height: 120px; border-radius: 50%; background: rgba(0, 162, 255, 0.1); color: var(--primary); font-size: 2rem; font-weight: 800; display: flex; justify-content: center; align-items: center; margin: 20px auto; border: 3px solid var(--primary); }
+        .confetti { position: absolute; width: 8px; height: 8px; top: -10px; border-radius: 50%; animation: confettiDrop 2.5s ease-out infinite; z-index: 10; }
         @keyframes confettiDrop {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
@@ -394,22 +231,22 @@
 <body>
 
 <div class="container" id="main-card">
-    <!-- Üst Kontrol Çubuğu -->
     <div class="top-bar">
-        <div id="streak-display" class="streak-badge" title="Günlük Çalışma Serisi">🔥 0 Gün</div>
+        <div id="streak-display" class="streak-badge">🔥 0 Gün</div>
         <div class="right-controls">
+            <button class="settings-btn backup-btn" onclick="exportData()" title="Verileri Yedekle">📥</button>
+            <button class="settings-btn backup-btn" onclick="document.getElementById('import-input').click()" title="Yedeği Yükle" style="background:#3498db !important; border-color:#3498db !important;">📤</button>
+            <input type="file" id="import-input" class="hidden" onchange="importData(event)" accept=".json">
             <button id="toggle-theme" class="settings-btn" onclick="toggleTheme()">🌙 Mod</button>
             <button id="toggle-sfx" class="settings-btn active" onclick="toggleSetting('sfx')">🎵 Sesler</button>
         </div>
     </div>
 
-    <!-- 1. YÜKLENİYOR EKRANI -->
     <div id="loading-container">
         <h2>Mani Lingo</h2>
         <p>Veri havuzu yükleniyor...</p>
     </div>
 
-    <!-- 2. KURULUM / SEÇİM EKRANI -->
     <div id="setup-container" class="hidden">
         <h1>Mani Lingo</h1>
         
@@ -424,7 +261,6 @@
         <div id="topics-container" class="topic-list"></div>
     </div>
 
-    <!-- 3. QUIZ EKRANI -->
     <div id="quiz-container" class="hidden">
         <div class="progress-bar"><div id="progress" class="progress"></div></div>
         <div id="question" class="question-box"></div>
@@ -437,7 +273,7 @@
             <button id="hint-btn" class="hint-action-btn" onclick="revealLetterHint()">💡</button>
         </div>
         
-        <div id="keyboard-container" class="keyboard-container hidden"></div>
+        <div id="keyboard-container" class="lv-keyboard hidden"></div>
         
         <div class="btn-group" style="margin-top: 20px;">
             <button id="submit-btn" onclick="checkTextAnswer()" style="background: var(--primary); color: white; border: none;" class="hidden">Kontrol Et</button>
@@ -446,7 +282,6 @@
         <div id="feedback" class="feedback"></div>
     </div>
 
-    <!-- 4. SONUÇ EKRANI -->
     <div id="result-container" class="hidden">
         <h2>Muhteşem Başarı! 🎉</h2>
         <div class="result-circle" id="result-circle-box">0%</div>
@@ -471,7 +306,7 @@
     let selectedLangMode = 'tr';
     let currentTopicKey = '';
     let hintCount = 0;
-    let isErrorMode = false;
+    let isSpecialMode = false; // Hata veya Karışık havuzları ayrımı için
 
     let settings = { sfx: localStorage.getItem('ml_sfx') !== 'false' };
 
@@ -508,6 +343,40 @@
         document.getElementById(`toggle-${key}`).classList.toggle('active', settings[key]);
     }
 
+    // 💾 3. MADDE: Verileri Dışa Aktar (Yedekle)
+    function exportData() {
+        let backup = {};
+        for(let i=0; i<localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if(key.startsWith('mani_') || key.startsWith('ml_')) {
+                backup[key] = localStorage.getItem(key);
+            }
+        }
+        const blob = new Blob([JSON.stringify(backup)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `mani_lingo_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+    }
+
+    // 💾 3. MADDE: Verileri Geri Yükle (Yedeği Aç)
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                Object.keys(data).forEach(key => localStorage.setItem(key, data[key]));
+                alert("Yedek başarıyla yüklendi! Sayfa yenileniyor...");
+                location.reload();
+            } catch(err) {
+                alert("Hata: Geçersiz yedek dosyası!");
+            }
+        };
+        reader.readAsText(file);
+    }
+
     function updateStreak(isQuizFinished = false) {
         const today = new Date().toDateString();
         const lastVisit = localStorage.getItem('ml_last_visit');
@@ -532,7 +401,6 @@
         document.getElementById('streak-display').innerText = `🔥 ${streak} Gün`;
     }
 
-    // 🎉 4. MADDE: Dinamik Konfeti Tetikleyici
     function triggerConfetti() {
         const card = document.getElementById("main-card");
         const colors = ['#f2d74e', '#95c3de', '#e94a3f', '#3fe979', '#a93fe9'];
@@ -593,16 +461,17 @@
         if (!container) return;
         container.innerHTML = ""; 
 
+        // 1. Hata Sepeti Butonu
         const errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
         if (errorPool.length > 0) {
             const errBtn = document.createElement("button");
             errBtn.className = "topic-btn error-pool-btn";
-            errBtn.style.animationDelay = "0.05s";
             errBtn.innerHTML = `<span>🚨 Yanlış Yaptığım Sorular</span> <span class="topic-score">${errorPool.length} Soru</span>`;
             errBtn.onclick = () => startTopic('__errors__');
             container.appendChild(errBtn);
         }
 
+        // 2. Normal Konu Butonları
         const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
         uniqueTopics.forEach((topicKey, index) => {
             let buttonText = topicKey;
@@ -610,17 +479,27 @@
 
             const button = document.createElement("button");
             button.className = "topic-btn";
-            button.style.animationDelay = `${(index + 1) * 0.08}s`;
+            button.style.animationDelay = `${(index + 1) * 0.05}s`;
             button.innerHTML = `<span>${buttonText}</span>`;
 
             const savedScoreData = localStorage.getItem(`mani_score_${topicKey}`);
-            if (savedScoreData) {
-                button.innerHTML += `<span class="topic-score">Rekor: ${savedScoreData}</span>`;
-            }
+            if (savedScoreData) button.innerHTML += `<span class="topic-score">Rekor: ${savedScoreData}</span>`;
 
             button.onclick = () => startTopic(topicKey);
             container.appendChild(button);
         });
+
+        // 🎯 İSTEK: Karışık Yükle Modu Butonu (En altta)
+        const mixBtn = document.createElement("button");
+        mixBtn.className = "topic-btn mix-pool-btn";
+        mixBtn.style.animationDelay = `${(uniqueTopics.length + 1) * 0.05}s`;
+        mixBtn.innerHTML = `<span>🎲 Karışık Yükle (Mix Modu)</span>`;
+        
+        const savedMixScore = localStorage.getItem('mani_score___mix__');
+        if (savedMixScore) mixBtn.innerHTML += `<span class="topic-score">Rekor: ${savedMixScore}</span>`;
+        
+        mixBtn.onclick = () => startTopic('__mix__');
+        container.appendChild(mixBtn);
     }
 
     function startTopic(selectedTopic) {
@@ -629,10 +508,14 @@
 
         if (selectedTopic === '__errors__') {
             allTopicQuestions = JSON.parse(localStorage.getItem('ml_errors') || '[]');
-            isErrorMode = true;
+            isSpecialMode = true;
+        } else if (selectedTopic === '__mix__') {
+            // 🎯 İSTEK: Bütün veri tabanını çorba yapıp karmaya alıyoruz
+            allTopicQuestions = [...vocabularyDatabase];
+            isSpecialMode = true;
         } else {
             allTopicQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
-            isErrorMode = false;
+            isSpecialMode = false;
         }
         
         if (allTopicQuestions.length === 0) return;
@@ -653,7 +536,6 @@
     function buildKeyboard() {
         const kbContainer = document.getElementById("keyboard-container");
         kbContainer.innerHTML = "";
-        kbContainer.className = "lv-keyboard hidden"; 
         lvLetters.forEach(letter => {
             const btn = document.createElement("button");
             btn.className = "kb-btn";
@@ -731,7 +613,6 @@
         const q = currentQuestions[currentIndex];
         const correctAnswer = (q.type === 'sentence' ? q.answer : q.lv);
         const inputField = document.getElementById("answer-input");
-
         if (hintCount < correctAnswer.length) {
             hintCount++;
             inputField.value = correctAnswer.substring(0, hintCount);
@@ -764,7 +645,6 @@
                   .replace(/ū/g, 'u').replace(/ž/g, 'z');
     }
 
-    // Sepet Güncelleyici
     function handleErrorsPool(question, isCorrect) {
         let errorPool = JSON.parse(localStorage.getItem('ml_errors') || '[]');
         if (isCorrect) {
@@ -779,7 +659,6 @@
     function verifyAnswer(selected, qObj) {
         const feedbackField = document.getElementById("feedback");
         const card = document.getElementById("main-card");
-
         if (selected.toLowerCase() === qObj.lv.toLowerCase()) {
             score++; playSound('success');
             feedbackField.className = "feedback success";
@@ -821,7 +700,6 @@
             feedbackField.innerText = `Nepareizi! Doğru cevap: ${correctAnswer}`;
             handleErrorsPool(q, false);
         }
-
         currentIndex++; setTimeout(showQuestion, 2000);
     }
 
@@ -829,14 +707,12 @@
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.remove("hidden");
         
-        // 🏆 4. MADDE: Başarı Halkası Yüzdesi Hesaplama
         const successPercentage = Math.round((score / currentQuestions.length) * 100);
         document.getElementById("result-circle-box").innerText = `${successPercentage}%`;
-        
-        document.getElementById("score-text").innerText = 
-            `25 soru içerisinden ${score} puan topladınız!`;
+        document.getElementById("score-text").innerText = `${currentQuestions.length} soru içerisinden ${score} puan topladınız!`;
 
-        if (!isErrorMode) {
+        // Skor kaydetme (Hata havuzu hariç, Karma havuz dahil rekor tutar)
+        if (currentTopicKey !== '__errors__') {
             const currentScoreString = `${score}/${currentQuestions.length}`;
             const existingRecord = localStorage.getItem(`mani_score_${currentTopicKey}`);
             if (existingRecord) {
@@ -847,11 +723,7 @@
             }
         }
         
-        // 🎯 4. MADDE: Tam puan (25/25) alındığında konfeti patlat
-        if (successPercentage === 100) {
-            triggerConfetti();
-        }
-        
+        if (successPercentage === 100) triggerConfetti();
         updateStreak(true);
     }
 
@@ -860,5 +732,15 @@
     }
 </script>
 
+<!-- 4. MADDE: PWA Service Worker Kurulumu -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Kaydedildi.', reg))
+                .catch(err => console.log('Service Worker Hatası:', err));
+        });
+    }
+</script>
 </body>
 </html>
