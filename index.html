@@ -56,7 +56,6 @@
             display: none !important;
         }
 
-        /* Buton Grubu Stilleri */
         .btn-group {
             display: flex;
             gap: 10px;
@@ -81,7 +80,6 @@
             background: rgba(0, 162, 255, 0.05);
         }
 
-        /* Aktif Dil Butonu */
         .lang-btn.active {
             background-color: var(--primary);
             border-color: var(--primary);
@@ -89,7 +87,6 @@
             box-shadow: 0 4px 12px rgba(0, 162, 255, 0.3);
         }
 
-        /* Dikey Konu Listesi */
         .topic-list {
             display: flex;
             flex-direction: column;
@@ -102,6 +99,9 @@
             text-align: left;
             padding: 16px 20px;
             background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .topic-btn:hover {
@@ -110,7 +110,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Quiz Arayüz Elemanları */
+        .topic-score {
+            font-size: 0.85rem;
+            background: #eef2f7;
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
         .progress-bar {
             height: 8px;
             width: 100%;
@@ -161,6 +169,7 @@
             margin-top: 15px;
             font-weight: 600;
             font-size: 1.1rem;
+            min-height: 24px;
         }
         .feedback.success { color: var(--success); }
         .feedback.error { color: var(--error); }
@@ -181,15 +190,13 @@
         
         <div class="subtitle">1. Öğrenme Dili Seçimi / Choose Language</div>
         <div class="btn-group">
-            <button id="btn-tr" class="lang-btn active" onclick="setLangMode('tr')">Türkçe</button>
+            <button id="btn-tr" class="lang-btn" onclick="setLangMode('tr')">Türkçe</button>
             <button id="btn-en" class="lang-btn" onclick="setLangMode('en')">English</button>
             <button id="btn-both" class="lang-btn" onclick="setLangMode('both')">English (Türkçe)</button>
         </div>
 
         <div class="subtitle">2. Konu Seçimi / Select Topic</div>
-        <div id="topics-container" class="topic-list">
-            <!-- Konu butonları buraya dinamik gelecek -->
-        </div>
+        <div id="topics-container" class="topic-list"></div>
     </div>
 
     <!-- 3. QUIZ EKRANI -->
@@ -214,8 +221,8 @@
         <button onclick="showSetupScreen()" style="background: var(--primary); color: white; border: none;">Ana Menüye Dön</button>
     </div>
 </div>
+
 <script>
-    // Konu Başlıkları Sözlüğü
     const topicTranslations = {
         'Selamlaşma ve Tanışma': {
             tr: 'Selamlaşma ve Tanışma',
@@ -239,89 +246,97 @@
     let currentIndex = 0;
     let score = 0;
     let selectedLangMode = 'tr';
+    let currentTopicKey = ''; // Aktif oynanan konuyu akılda tutmak için
 
-    // Veri dosyasını çekip her şeyin sırayla çalışmasını garanti eden fonksiyon
     async function loadDatabase() {
         try {
             const response = await fetch('./questions.json');
             if (!response.ok) throw new Error("Veri dosyası bulunamadı");
-            
             vocabularyDatabase = await response.json();
-            console.log("JSON Başarıyla Yüklendi:", vocabularyDatabase); // Kontrol için
             
-            // Veri yüklendikten sonra arayüzü göster
-            document.getElementById("loading-container").classList.add("hidden");
-            document.getElementById("setup-container").classList.remove("hidden");
+            // 💾 LOCALSTORAGE: Hafızadaki kayıtlı dil modunu yükle, yoksa varsayılan 'tr' yap
+            const savedLang = localStorage.getItem('mani_lingo_lang');
+            if (savedLang) {
+                selectedLangMode = savedLang;
+            }
             
-            // Konuları ilk kez ekrana bas
-            renderTopics();
+            showSetupScreen();
         } catch (error) {
             document.getElementById("loading-container").innerText = "Hata: Canlı veri havuzu yüklenemedi!";
             console.error(error);
         }
     }
 
-    // Sayfa DOM elementleri hazır olduğunda veri yüklemesini başlat
     document.addEventListener("DOMContentLoaded", loadDatabase);
 
     function showSetupScreen() {
         document.getElementById("quiz-container").classList.add("hidden");
         document.getElementById("result-container").classList.add("hidden");
         document.getElementById("setup-container").classList.remove("hidden");
+        
+        // Dil butonlarının aktifliğini hafızaya göre güncelle
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.getElementById(`btn-${selectedLangMode}`);
+        if(activeBtn) activeBtn.classList.add('active');
+
         renderTopics();
     }
 
-    // Dil butonuna tıklandığında tetiklenen fonksiyon
     function setLangMode(mode) {
         selectedLangMode = mode;
         
-        // Butonların görsel aktifliğini güncelle
+        // 💾 LOCALSTORAGE: Seçilen dili hafızaya kaydet
+        localStorage.setItem('mani_lingo_lang', mode);
+        
         document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`btn-${mode}`);
         if(activeBtn) activeBtn.classList.add('active');
         
-        // Konuları yeni seçilen dile göre baştan oluştur
         renderTopics();
     }
 
-    // Konuları ekrana dinamik olarak basan fonksiyon
     function renderTopics() {
         const container = document.getElementById("topics-container");
         if (!container) return;
-        
         container.innerHTML = ""; 
 
-        if (vocabularyDatabase.length === 0) {
-            container.innerHTML = "<p style='color:red;'>Havuzda henüz konu bulunamadı. JSON yüklenememiş olabilir.</p>";
-            return;
-        }
+        if (vocabularyDatabase.length === 0) return;
 
-        // Benzersiz konuları topla
         const uniqueTopics = [...new Set(vocabularyDatabase.map(q => q.topic))];
 
         uniqueTopics.forEach(topicKey => {
             let buttonText = topicKey;
-            
             if (topicTranslations[topicKey]) {
                 buttonText = topicTranslations[topicKey][selectedLangMode];
             }
 
             const button = document.createElement("button");
             button.className = "topic-btn";
-            button.innerText = buttonText;
-            button.onclick = () => startTopic(topicKey);
             
+            // Konu metnini sol tarafa ekle
+            const textSpan = document.createElement("span");
+            textSpan.innerText = buttonText;
+            button.appendChild(textSpan);
+
+            // 💾 LOCALSTORAGE: Bu konunun skor kaydı var mı kontrol et
+            const savedScoreData = localStorage.getItem(`mani_score_${topicKey}`);
+            if (savedScoreData) {
+                const scoreSpan = document.createElement("span");
+                scoreSpan.className = "topic-score";
+                scoreSpan.innerText = `Skor: ${savedScoreData}`; // Örn: "Skor: 8/10"
+                button.appendChild(scoreSpan);
+            }
+
+            button.onclick = () => startTopic(topicKey);
             container.appendChild(button);
         });
     }
 
     function startTopic(selectedTopic) {
+        currentTopicKey = selectedTopic; // Hangi konunun oynandığını kaydet
         currentQuestions = vocabularyDatabase.filter(q => q.topic === selectedTopic);
         
-        if (currentQuestions.length === 0) {
-            alert("Bu konuya ait soru bulunamadı!");
-            return;
-        }
+        if (currentQuestions.length === 0) return;
 
         currentQuestions.sort(() => Math.random() - 0.5);
         currentIndex = 0;
@@ -396,6 +411,21 @@
         document.getElementById("result-container").classList.remove("hidden");
         document.getElementById("score-text").innerText = 
             `${currentQuestions.length} soru içerisinden ${score} doğru cevap verdiniz!`;
+
+        // 💾 LOCALSTORAGE: Skor kaydetme mantığı
+        const currentScoreString = `${score}/${currentQuestions.length}`;
+        const existingRecord = localStorage.getItem(`mani_score_${currentTopicKey}`);
+
+        if (existingRecord) {
+            // Eğer daha önce oynandıysa, sadece daha yüksek olan skoru koru
+            const oldCorrect = parseInt(existingRecord.split('/')[0]);
+            if (score > oldCorrect) {
+                localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
+            }
+        } else {
+            // İlk kez oynanıyorsa direkt kaydet
+            localStorage.setItem(`mani_score_${currentTopicKey}`, currentScoreString);
+        }
     }
 
     function exitQuiz() {
@@ -404,5 +434,6 @@
         }
     }
 </script>
+
 </body>
 </html>
